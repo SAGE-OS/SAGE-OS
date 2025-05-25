@@ -136,6 +136,26 @@ Enable devices running SAGE OS to contribute to model search in a **federated wa
 
 #### 📌 NAS Core Loop (Integrated into AI Subsystem)
 
+#### Sequence Diagram for Dynamic ABI Adaptation in SAGE OS
+
+```mermaid
+sequenceDiagram
+    participant SAGE_OS as SAGE OS
+    participant AZR as AZR (Reasoner)
+    participant NAS_Engine as NAS Engine
+    participant ABI_Adapter as AZR ABI Adapter
+
+    SAGE_OS->>AZR: Encountered unknown binary, process
+    AZR->>AZR: Existing model fails/underperforms
+    AZR->>NAS_Engine: Trigger new model search for ABI adaptation
+    NAS_Engine->>NAS_Engine: Search/Train best model
+    NAS_Engine->>NAS_Engine: Export best model (e.g., ONNX)
+    NAS_Engine->>ABI_Adapter: Deploy new model
+    ABI_Adapter->>ABI_Adapter: Load new model dynamically
+    ABI_Adapter->>SAGE_OS: Successfully adapted to binary
+```
+
+
 ```
 graph TD
     A[Target Task] --> B[Search Space Definition]
