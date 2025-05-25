@@ -1,3 +1,12 @@
+<!--
+─────────────────────────────────────────────────────────────────────────────
+SAGE OS — Copyright (c) 2025 Ashish Vasant Yesale (ashishyesale007@gmail.com)
+SPDX-License-Identifier: BSD-3-Clause OR Proprietary
+SAGE OS is dual-licensed under the BSD 3-Clause License and a Commercial License.
+
+This file is part of the SAGE OS Project.
+─────────────────────────────────────────────────────────────────────────────
+-->
 # 🧰 SAGE OS SDK Overview
 
 Welcome to the **SAGE OS Software Development Kit (SDK)** — a comprehensive toolkit that empowers developers, researchers, and hardware vendors to build secure, cross-architecture, AI-integrated applications and modules for the SAGE OS ecosystem.
