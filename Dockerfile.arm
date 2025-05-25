@@ -1,0 +1,35 @@
+# Multi-stage build for SAGE OS (arm)
+FROM --platform=linux/amd64 ubuntu:22.04 as builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc-aarch64-linux-gnu \
+    gcc-arm-linux-gnueabihf \
+    gcc-riscv64-linux-gnu \
+    gcc-x86-64-linux-gnu \
+    qemu-system-arm \
+    qemu-system-x86 \
+    qemu-system-misc \
+    genisoimage \
+    dosfstools \
+    make \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up working directory
+WORKDIR /workspace
+
+# Copy source code
+COPY . .
+
+# Set default architecture
+ENV ARCH=arm
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Build script
+RUN chmod +x build.sh
+
+# Default command
+CMD ["make", "-f", "Makefile.multi-arch", "kernel"]
