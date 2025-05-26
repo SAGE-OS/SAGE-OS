@@ -7,195 +7,102 @@ SAGE OS is dual-licensed under the BSD 3-Clause License and a Commercial License
 This file is part of the SAGE OS Project.
 ─────────────────────────────────────────────────────────────────────────────
 -->
- 
 # 🧰 SAGE OS SDK Overview
 
-Welcome to the **SAGE OS Software Development Kit (SDK)** — a unified framework for developing, testing, and deploying applications, device drivers, AI models, and Absolute Zero Reasoner (AZR) modules for **SAGE OS**, the future-proof, AI-integrated, cross-architecture operating system.
+Welcome to the **SAGE OS Software Development Kit (SDK)** — a comprehensive toolkit that empowers developers, researchers, and hardware vendors to build secure, cross-architecture, AI-integrated applications and modules for the SAGE OS ecosystem.
 
----
+## 🚀 Purpose of the SDK
 
-## 🚀 Purpose
+The SAGE SDK serves as the **interface layer between developers and the core of SAGE OS**, enabling:
 
-The SAGE SDK provides:
+- Native application development
+- AI model integration (e.g., for AZR modules)
+- Custom kernel extensions and drivers
+- Cross-platform compilation and binary translation
+- Hardware accelerator (e.g., AI Hat) integration
 
-- Developer-friendly APIs for native and AI-assisted applications
-- Toolchains for building binaries for ARM, x86_64, and RISC-V
-- Integration layer for AI Hat and NAS-based models
-- Packaging and deployment tools for verified builds
-- Templates and examples for AZR and kernel module extensions
+## 🧩 SDK Structure
 
----
-
-## 🧩 SDK Directory Layout
-
-```plaintext
+```
 sage-sdk/
-├── include/            # Public header files (APIs, interfaces)
-├── lib/                # Static/shared libraries (.a / .so)
-├── examples/           # Example modules and apps
-├── tools/              # CLI tools: builder, packager, etc.
-├── toolchains/         # Cross-compiler configs for supported archs
-├── docs/               # Reference manuals, integration guides
-└── CMakeLists.txt      # Build configuration
-````
-
----
-
-## 📚 Key SDK Components
-
-### 🔹 Header Files (`include/`)
-
-| File           | Description                                           |
-| -------------- | ----------------------------------------------------- |
-| `azr.h`        | API interface for developing AZR modules              |
-| `ai_hat.h`     | Hardware access layer for the Pi AI Hat+ accelerator  |
-| `kernel_api.h` | Minimalist SAGE kernel service interface for userland |
-| `memory.h`     | Memory mapping and allocation support                 |
-
----
-
-### 🔹 Libraries (`lib/`)
-
-| Library      | Description                          |
-| ------------ | ------------------------------------ |
-| `libazr.a`   | AZR engine interface and abstraction |
-| `libaihat.a` | AI Hat support library               |
-| `libcore.a`  | Core OS support functions            |
-| `libsys.a`   | OS utilities and runtime wrappers    |
-
----
-
-### 🔹 Tools (`tools/`)
-
-| Tool            | Role                                          |
-| --------------- | --------------------------------------------- |
-| `azr-builder`   | Builds and packages AZR modules               |
-| `nas-integrate` | Integrates NAS-generated models               |
-| `sage-package`  | Cryptographically signs and packages binaries |
-| `qemu-launch`   | Launches builds in QEMU for testing           |
-
----
-
-### 🔹 Example Modules (`examples/`)
-
-| File / Folder          | Description                         |
-| ---------------------- | ----------------------------------- |
-| `hello_world.c`        | Minimal C user app                  |
-| `azr_stub_predictor.c` | Sample AZR syscall prediction stub  |
-| `driver_demo_uart.c`   | UART driver interface example       |
-| `nas_sample_model.pt`  | NAS-trained model (PyTorch) example |
-
----
-
-## 🔧 Toolchain Support
-
-The SDK supports building for the following platforms:
-
-| Architecture | Toolchain Prefix       | Package                   |
-| ------------ | ---------------------- | ------------------------- |
-| x86\_64      | `x86_64-elf-`          | `x86_64-elf-gcc`          |
-| ARMv7        | `arm-none-eabi-`       | `arm-none-eabi-gcc`       |
-| AArch64      | `aarch64-none-elf-`    | `aarch64-none-elf-gcc`    |
-| RISC-V       | `riscv64-unknown-elf-` | `riscv64-unknown-elf-gcc` |
-
----
-
-## 🧠 AI + NAS Integration
-
-The SDK supports AI-based reasoning modules and NAS (Neural Architecture Search) outputs.
-
-### ✅ Supported Formats
-
-* **AZR modules**: FlatBuffers, ONNX, custom ELF
-* **NAS models**: PyTorch → TVM (for inference on AI Hat+)
-* **Model training**: `torch`, `ray`, `nas-bench`, custom pipelines
-
-### 📂 `nas-integrate` Workflow
-
-```bash
-# Train or import model
-$ python3 train_nas_model.py --output model.pt
-
-# Convert to TVM for SAGE
-$ tvmc compile model.pt --target=rpi --output model.tar
-
-# Package it
-$ ./tools/nas-integrate model.tar --as libazr_predictor.so
+├── include/            # Header files for APIs (AZR, memory, syscalls)
+├── lib/                # Precompiled libraries (.a/.so)
+├── tools/              # CLI tools for packaging, testing, and model building
+├── examples/           # Sample programs and AZR modules
+├── docs/               # Developer documentation
+├── toolchains/         # Cross-compiler toolchains (optional)
+└── CMakeLists.txt      # Build system
 ```
 
----
+## 📚 Key Components
 
-## 🔐 Packaging and Deployment
+### ✅ Libraries
 
-Before deploying any module to a SAGE OS device, sign and package it:
+| Library | Purpose |
+|--------|---------|
+| `libazr` | Core AZR syscall, ABI, binary translation interfaces |
+| `libaihat` | AI accelerator (e.g., Raspberry Pi AI Hat) driver interface |
+| `libsys` | Basic OS services (I/O, memory, shell, FS, etc.) |
 
-```bash
-$ ./tools/sage-package build/myapp.elf \
-    --out dist/myapp.pkg \
-    --sign keys/dev.key
-```
+### 🛠️ Tools
 
-SAGE OS will only load signed packages with trusted public keys.
+| Tool | Description |
+|------|-------------|
+| `azr-model-builder` | Package and validate AZR modules (AI reasoners) |
+| `sage-package` | Create signed SAGE modules/apps |
+| `qemu-test` | Run apps inside QEMU SAGE OS instance |
+| `nas-train` (future) | Interface to neural architecture search tooling for SAGE |
 
----
+## 🌐 Architecture Support
 
-## ✅ Developer Workflow
+The SDK supports all platforms supported by SAGE OS:
 
-```bash
-# 1. Install SDK
+- `x86_64`
+- `ARM` and `ARM64` (Raspberry Pi 4 & 5)
+- `RISC-V` (via optional toolchain)
+- All AZR-compatible ABIs
+
+## 🔐 Security & Signing
+
+- All SDK output (binaries, AZR models, kernel modules) must be **signed** using the `sage-package` tool to be accepted by SAGE OS.
+
+## 💡 Typical Workflow
+
+```sh
+# 1. Install SDK + toolchains
 $ ./install-sdk.sh
 
-# 2. Build an example AZR module
-$ cd examples/azr_stub_predictor/
+# 2. Create or modify your app/module
+$ edit examples/hello_world.c
+
+# 3. Build against SAGE SDK
 $ make TARGET=aarch64
 
-# 3. Test it using QEMU
-$ ./tools/qemu-launch build/kernel.img build/azr_stub_predictor.elf
+# 4. Test in QEMU
+$ ./tools/qemu-test build/kernel.img examples/hello_world.elf
 
-# 4. Package the module
-$ ./tools/sage-package build/azr_stub_predictor.elf \
-    --out dist/azr_predictor.pkg --sign keys/dev.key
-
-# 5. Deploy to SD card or emulator
+# 5. Package for deployment
+$ ./tools/sage-package examples/hello_world.elf --out out.pkg --sign dev.key
 ```
 
----
+## 🔬 Integration with AI Systems
 
-## 🌍 Multi-Architecture Compatibility
+| Integration | Format | Description |
+|-------------|--------|-------------|
+| AZR Modules | ONNX/FlatBuffers | Reasoners used for syscall analysis, binary prediction |
+| NAS Models | PyTorch/ONNX | Neural architecture search output |
+| AI Accelerators | TVM/C API | Interface to hardware like Pi AI Hat+ |
 
-Thanks to the AZR engine and binary translation system, applications written and packaged via the SDK can:
+## 📦 Example Use Cases
 
-* Run natively across platforms (e.g., x86\_64 → ARM)
-* Be translated at runtime using AZR + NAS-predicted mappings
-* Be optimized for AI-accelerated reasoning via onboard devices
+- Create a new system call monitor using an AZR module
+- Train and deploy a NAS-evolved instruction predictor
+- Build an AI-powered binary translator plug-in
+- Develop custom drivers for sensors or AI modules
 
----
+## 📎 See Also
 
-## 📈 Future Plans
-
-* 🔄 Live update + rollback support
-* ☁️ Cloud-based AZR training and testing pipeline
-* 🧬 SDK extensions for Rust and Python bindings
-* 📦 Web-based SAGE SDK launcher and plugin manager
-
----
-
-## 🧠 Resources
-
-* [SAGE OS Architecture](./SAGE-OS-Architecture.md)
-* [AZR Reasoning System](./AZR-Module-Integration.md)
-* [Neural Architecture Search Integration](./NAS-Integration.md)
-* [AI Hat Device API Reference](./AI-HAT-Reference.md)
-* [Building for Multiple Architectures](./Cross-Compilation-Guide.md)
-
----
-
-> 💡 *Build once. Deploy everywhere. Reason intelligently.*
->
-> — SAGE OS SDK Team
-
-```
-
----
-
- 
+- [AZR Model Integration Guide](AZR-Module-Integration.md)
+- [SAGE OS Architecture](SAGE-OS-Architecture.md)
+- [NAS for SAGE OS](Neural-Architecture-Search.md)
+- [AI HAT API Reference](AI-HAT-Reference.md)
