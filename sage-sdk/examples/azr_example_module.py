@@ -5,7 +5,6 @@
 # 
 # This file is part of the SAGE OS Project.
 # ─────────────────────────────────────────────────────────────────────────────
-
 # AZR Reasoner Module (stub)
 def reason():
     print("Reasoning...")
