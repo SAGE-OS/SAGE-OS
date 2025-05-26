@@ -1,3 +1,5 @@
 {
-    "cmake.ignoreCMakeListsMissing": true
+    "files.associations": {
+        "stdio.h": "c"
+    }
 }

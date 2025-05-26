@@ -5,7 +5,6 @@
  * 
  * This file is part of the SAGE OS Project.
  * ───────────────────────────────────────────────────────────────────────────── */
-
 #ifndef AZR_H
 #define AZR_H
 

@@ -5,7 +5,6 @@
  * 
  * This file is part of the SAGE OS Project.
  * ───────────────────────────────────────────────────────────────────────────── */
-
 #ifndef AI_HAT_H
 #define AI_HAT_H
 
