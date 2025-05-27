@@ -9,6 +9,19 @@
 .section ".text.boot"
 .globl _start
 
+#if defined(__x86_64__)
+// Multiboot header for x86_64
+#define MULTIBOOT_MAGIC         0x1BADB002
+#define MULTIBOOT_FLAGS         0x00000003
+#define MULTIBOOT_CHECKSUM      -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)
+
+.align 4
+multiboot_header:
+    .long MULTIBOOT_MAGIC
+    .long MULTIBOOT_FLAGS
+    .long MULTIBOOT_CHECKSUM
+#endif
+
 // Entry point for the kernel
 _start:
 #if defined(__aarch64__) || defined(__arm64__)
@@ -81,7 +94,11 @@ hang_arm:
     b       hang_arm
 
 #elif defined(__x86_64__)
-    // x86_64 specific code
+    // x86_64 specific code with multiboot support
+    
+    // Disable interrupts
+    cli
+    
     // Set up stack
     movq    $stack_top, %rsp
     
@@ -100,6 +117,9 @@ hang_arm:
 hang_x86_64:
     hlt
     jmp     hang_x86_64
+
+// Multiboot header for x86_64
+
 
 #elif defined(__riscv) && __riscv_xlen == 64
     // RISC-V 64-bit specific code

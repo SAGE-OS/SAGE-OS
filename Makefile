@@ -42,7 +42,12 @@ else ifeq ($(ARCH),riscv64)
     CFLAGS += -D__riscv -D__riscv_xlen=64
 endif
 
-LDFLAGS=-T linker.ld
+# Architecture-specific linker script
+ifeq ($(ARCH),x86_64)
+    LDFLAGS=-T linker_x86_64.ld
+else
+    LDFLAGS=-T linker.ld
+endif
 
 # Create build directory for architecture
 BUILD_DIR=build/$(ARCH)

@@ -1,38 +1,44 @@
 ENTRY(_start)
 
+PHDRS
+{
+    text PT_LOAD FLAGS(5); /* Read + Execute */
+    data PT_LOAD FLAGS(6); /* Read + Write */
+}
+
 SECTIONS
 {
-    /* Kernel starts at 0x80000 for Raspberry Pi 3/4, 0x100000 for x86_64 */
-    . = 0x80000;
+    /* Kernel starts at 1MB for x86_64 */
+    . = 0x100000;
     
     __start = .;
     
-    /* Multiboot header for x86/x86_64 */
-    .multiboot : {
+    /* Multiboot header must be at the very beginning */
+    .multiboot : ALIGN(4) {
         *(.multiboot)
-    }
+    } :text
     
-    /* Boot section with startup code */
-    .text.boot : {
+    /* Boot section with startup code immediately after multiboot */
+    .text.boot : ALIGN(4) {
         *(.text.boot)
-    }
+    } :text
     
     /* Regular text section */
     .text : {
         *(.text)
-    }
+    } :text
     
     /* Read-only data section */
     .rodata : {
         *(.rodata)
         *(.rodata.*)
-    }
+    } :text
     
     /* Initialized data section */
     .data : {
         *(.data)
         *(.data.*)
-    }
+    } :data
     
     /* Uninitialized data section (zeroed at boot) */
     .bss : {
