@@ -112,7 +112,9 @@ static void add_to_history(const char* command) {
         return;  // Don't add duplicate commands consecutively
     }
     
-    strcpy(history[history_index], command);
+    // Use safe string copy with bounds checking
+    strncpy(history[history_index], command, MAX_COMMAND_LENGTH - 1);
+    history[history_index][MAX_COMMAND_LENGTH - 1] = '\0';  // Ensure null termination
     history_index = (history_index + 1) % HISTORY_SIZE;
     if (history_count < HISTORY_SIZE) {
         history_count++;

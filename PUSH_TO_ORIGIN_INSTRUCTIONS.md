@@ -38,7 +38,7 @@ git push origin origin
 ```bash
 cd /workspace/SAGE-OS
 # If you have a GitHub token
-git remote set-url origin https://YOUR_GITHUB_TOKEN@github.com/hstream-app/SAGE-OS.git
+git remote set-url origin https://YOUR_GITHUB_TOKEN@github.com/AshishYesale7/SAGE-OS.git
 git push origin origin
 
 # Or with username/password
@@ -49,7 +49,7 @@ git push origin origin
 ## 🎯 VERIFICATION AFTER PUSH
 After pushing, verify the changes are live:
 
-1. **Check GitHub**: Visit https://github.com/hstream-app/SAGE-OS/tree/origin
+1. **Check GitHub**: Visit https://github.com/AshishYesale7/SAGE-OS/tree/origin
 2. **Verify Commit**: Look for commit `351138e` with message "Fix build.sh: Add missing check_deps_silent function"
 3. **Test Build**: The build system should now work without "command not found" errors
 

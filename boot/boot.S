@@ -6,13 +6,55 @@
  * This file is part of the SAGE OS Project.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-.section ".text.boot"
-.globl _start
+#if defined(__x86_64__)
+// Multiboot header for x86_64 - must be at the very beginning
+.section ".multiboot"
+.align 4
+
+#define MULTIBOOT_MAGIC         0x1BADB002
+#define MULTIBOOT_FLAGS         0x00000003
+#define MULTIBOOT_CHECKSUM      -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)
+
+multiboot_header:
+    .long MULTIBOOT_MAGIC
+    .long MULTIBOOT_FLAGS
+    .long MULTIBOOT_CHECKSUM
+
+.section ".text"
+.global _start
 
 // Entry point for the kernel
 _start:
-#if defined(__aarch64__) || defined(__arm64__)
-    // AArch64 specific code
+    // Disable interrupts
+    cli
+    
+    // Set up stack
+    mov $stack_top, %rsp
+    
+    // Clear direction flag
+    cld
+    
+    // Call kernel main
+    call kernel_main
+    
+    // If kernel_main returns, halt
+halt_loop:
+    hlt
+    jmp halt_loop
+
+// Stack space
+.section ".bss"
+.align 16
+stack_bottom:
+    .skip 16384  // 16KB stack
+stack_top:
+
+#elif defined(__aarch64__) || defined(__arm64__)
+
+.section ".text"
+.global _start
+
+_start:
     // Check processor ID, stop all but core 0
     mrs     x1, mpidr_el1
     and     x1, x1, #3
@@ -26,108 +68,41 @@ _start:
     ldr     x1, =stack_top
     mov     sp, x1
 
-    // Clear BSS
-    ldr     x1, =__bss_start
-    ldr     x2, =__bss_end
-    cmp     x1, x2
-    beq     3f
-    
-    // Clear loop
-    mov     x3, #0
-1:  str     x3, [x1], #8
-    cmp     x1, x2
-    blo     1b
-    
-3:  // Jump to C code
+    // Jump to kernel main
     bl      kernel_main
-    
-    // If kernel_main returns, halt the CPU
-hang_aarch64:
-    wfe
-    b       hang_aarch64
+    // Should never return
+4:  wfe
+    b       4b
 
-#elif defined(__arm__)
-    // ARM (32-bit) specific code
-    // Check processor ID, stop all but core 0
-    mrc     p15, 0, r1, c0, c0, 5
-    and     r1, r1, #3
-    cmp     r1, #0
-    bne     1f
-    b       2f
-    // CPU ID > 0, stop
-1:  wfe
-    b       1b
-2:  // CPU ID == 0
+// Stack space
+.section ".bss"
+.align 16
+stack_bottom:
+    .skip 16384  // 16KB stack
+stack_top:
 
+#elif defined(__riscv) && (__riscv_xlen == 64)
+
+.section ".text"
+.global _start
+
+_start:
     // Set stack pointer
-    ldr     r1, =stack_top
-    mov     sp, r1
-
-    // Clear BSS
-    ldr     r1, =__bss_start
-    ldr     r2, =__bss_end
-    mov     r3, #0
-3:  cmp     r1, r2
-    bge     4f
-    str     r3, [r1], #4
-    b       3b
-    
-4:  // Jump to C code
-    bl      kernel_main
-    
-    // If kernel_main returns, halt the CPU
-hang_arm:
-    wfe
-    b       hang_arm
-
-#elif defined(__x86_64__)
-    // x86_64 specific code
-    // Set up stack
-    movq    $stack_top, %rsp
-    
-    // Clear BSS
-    movq    $__bss_start, %rdi
-    movq    $__bss_end, %rcx
-    subq    %rdi, %rcx
-    xorq    %rax, %rax
-    shrq    $3, %rcx
-    rep stosq
-    
-    // Call kernel_main
-    call    kernel_main
-    
-    // If kernel_main returns, halt the CPU
-hang_x86_64:
-    hlt
-    jmp     hang_x86_64
-
-#elif defined(__riscv) && __riscv_xlen == 64
-    // RISC-V 64-bit specific code
-    // Set up stack
     la      sp, stack_top
-    
-    // Clear BSS
-    la      t0, __bss_start
-    la      t1, __bss_end
-    bgeu    t0, t1, 2f
-1:
-    sd      zero, 0(t0)
-    addi    t0, t0, 8
-    bltu    t0, t1, 1b
-2:
-    // Call kernel_main
+
+    // Jump to kernel main
     call    kernel_main
-    
-    // If kernel_main returns, halt the CPU
-hang_riscv:
-    wfi
-    j       hang_riscv
+    // Should never return
+2:  wfi
+    j       2b
+
+// Stack space
+.section ".bss"
+.align 16
+stack_bottom:
+    .skip 16384  // 16KB stack
+stack_top:
 
 #else
     #error "Unsupported architecture"
 #endif
-
-.section ".bss"
-.align 16
-.space 4096
-stack_top:

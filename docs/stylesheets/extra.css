@@ -1,0 +1,383 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+ * SAGE OS — Copyright (c) 2025 Ashish Vasant Yesale (ashishyesale007@gmail.com)
+ * SPDX-License-Identifier: BSD-3-Clause OR Proprietary
+ * SAGE OS is dual-licensed under the BSD 3-Clause License and a Commercial License.
+ * 
+ * This file is part of the SAGE OS Project.
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Licensing:
+ * -----------
+ * 
+ * Licensed under the BSD 3-Clause License or a Commercial License.
+ * You may use this file under the terms of either license as specified in:
+ * 
+ *    - BSD 3-Clause License (see ./LICENSE)
+ *    - Commercial License (see ./COMMERCIAL_TERMS.md or contact legal@your.org)
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted under the BSD license provided that the
+ * following conditions are met:
+ * 
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *   * Neither the name of the project nor the names of its contributors
+ *     may be used to endorse or promote products derived from this
+ *     software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * By using this software, you agree to be bound by the terms of either license.
+ * 
+ * Alternatively, commercial use with extended rights is available — contact the author for commercial licensing.
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Contributor Guidelines:
+ * ------------------------
+ * Contributions are welcome under the terms of the Developer Certificate of Origin (DCO).
+ * All contributors must certify that they have the right to submit the code and agree to
+ * release it under the above license terms.
+ * 
+ * Contributions must:
+ *   - Be original or appropriately attributed
+ *   - Include clear documentation and test cases where applicable
+ *   - Respect the coding and security guidelines defined in CONTRIBUTING.md
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Terms of Use and Disclaimer:
+ * -----------------------------
+ * This software is provided "as is", without any express or implied warranty.
+ * In no event shall the authors, contributors, or copyright holders
+ * be held liable for any damages arising from the use of this software.
+ * 
+ * Use of this software in critical systems (e.g., medical, nuclear, safety)
+ * is entirely at your own risk unless specifically licensed for such purposes.
+ * 
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+
+/* SAGE OS Documentation Custom Styles */
+
+:root {
+  --sage-primary: #1976d2;
+  --sage-accent: #ff5722;
+  --sage-success: #4caf50;
+  --sage-warning: #ff9800;
+  --sage-error: #f44336;
+  --sage-info: #2196f3;
+}
+
+/* Custom color scheme */
+[data-md-color-scheme="sage"] {
+  --md-primary-fg-color: var(--sage-primary);
+  --md-accent-fg-color: var(--sage-accent);
+}
+
+/* Logo styling */
+.md-header__button.md-logo img {
+  height: 32px;
+  width: auto;
+}
+
+/* Custom admonitions */
+.md-typeset .admonition.sage {
+  border-color: var(--sage-primary);
+}
+
+.md-typeset .admonition.sage > .admonition-title {
+  background-color: var(--sage-primary);
+  color: white;
+}
+
+/* Code block enhancements */
+.md-typeset .highlight .filename {
+  background-color: var(--md-code-bg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color--light);
+  font-size: 0.85em;
+  padding: 0.5rem 1rem;
+  margin: 0;
+}
+
+/* Architecture badges */
+.arch-badge {
+  display: inline-block;
+  padding: 0.2em 0.6em;
+  margin: 0.1em;
+  border-radius: 0.25em;
+  font-size: 0.75em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.arch-badge.x86_64 {
+  background-color: #2196f3;
+  color: white;
+}
+
+.arch-badge.arm64 {
+  background-color: #4caf50;
+  color: white;
+}
+
+.arch-badge.riscv {
+  background-color: #ff9800;
+  color: white;
+}
+
+/* Status indicators */
+.status-indicator {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  margin-right: 0.5em;
+}
+
+.status-indicator.stable {
+  background-color: var(--sage-success);
+}
+
+.status-indicator.beta {
+  background-color: var(--sage-warning);
+}
+
+.status-indicator.alpha {
+  background-color: var(--sage-error);
+}
+
+/* Grid cards enhancement */
+.md-typeset .grid.cards > ol > li,
+.md-typeset .grid.cards > ul > li {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.md-typeset .grid.cards > ol > li:hover,
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--sage-primary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+  text-align: center;
+  margin: 1em 0;
+}
+
+/* Table enhancements */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--sage-primary);
+  color: white;
+  font-weight: bold;
+}
+
+/* Button enhancements */
+.md-button {
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.md-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Progress bars */
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: var(--md-default-fg-color--lightest);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0.5em 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--sage-primary);
+  transition: width 0.3s ease;
+}
+
+/* Security level indicators */
+.security-level {
+  display: inline-block;
+  padding: 0.2em 0.8em;
+  border-radius: 1em;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.security-level.critical {
+  background-color: var(--sage-error);
+  color: white;
+}
+
+.security-level.high {
+  background-color: var(--sage-warning);
+  color: white;
+}
+
+.security-level.medium {
+  background-color: var(--sage-info);
+  color: white;
+}
+
+.security-level.low {
+  background-color: var(--sage-success);
+  color: white;
+}
+
+/* Architecture comparison table */
+.arch-comparison {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.arch-comparison th,
+.arch-comparison td {
+  padding: 0.75em;
+  text-align: center;
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.arch-comparison th {
+  background-color: var(--sage-primary);
+  color: white;
+}
+
+.arch-comparison .feature-supported {
+  color: var(--sage-success);
+  font-weight: bold;
+}
+
+.arch-comparison .feature-partial {
+  color: var(--sage-warning);
+  font-weight: bold;
+}
+
+.arch-comparison .feature-unsupported {
+  color: var(--sage-error);
+  font-weight: bold;
+}
+
+/* Code language indicators */
+.code-lang {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  background-color: var(--sage-primary);
+  color: white;
+  padding: 0.2em 0.5em;
+  border-radius: 0.25em;
+  font-size: 0.7em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .md-typeset .grid.cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .arch-comparison {
+    font-size: 0.8em;
+  }
+  
+  .arch-comparison th,
+  .arch-comparison td {
+    padding: 0.5em;
+  }
+}
+
+/* Print styles */
+@media print {
+  .md-header,
+  .md-sidebar,
+  .md-footer {
+    display: none !important;
+  }
+  
+  .md-content {
+    margin: 0 !important;
+  }
+  
+  .mermaid {
+    break-inside: avoid;
+  }
+}
+
+/* Dark mode adjustments */
+[data-md-color-scheme="slate"] {
+  --sage-primary: #42a5f5;
+  --sage-accent: #ff7043;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: var(--sage-primary);
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Highlight boxes */
+.highlight-box {
+  background-color: var(--md-accent-fg-color--transparent);
+  border-left: 4px solid var(--md-accent-fg-color);
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 0 0.5em 0.5em 0;
+}
+
+.highlight-box.info {
+  background-color: rgba(33, 150, 243, 0.1);
+  border-left-color: var(--sage-info);
+}
+
+.highlight-box.warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  border-left-color: var(--sage-warning);
+}
+
+.highlight-box.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-left-color: var(--sage-success);
+}
+
+.highlight-box.error {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-left-color: var(--sage-error);
+}

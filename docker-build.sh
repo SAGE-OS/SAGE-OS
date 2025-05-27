@@ -179,7 +179,7 @@ COPY config*.txt /boot/
 LABEL org.opencontainers.image.title="SAGE OS"
 LABEL org.opencontainers.image.version="0.1.0"
 LABEL org.opencontainers.image.description="SAGE OS - Self-Aware General Environment Operating System"
-LABEL org.opencontainers.image.source="https://github.com/hstream-app/SAGE-OS"
+LABEL org.opencontainers.image.source="https://github.com/AshishYesale7/SAGE-OS"
 LABEL org.opencontainers.image.licenses="BSD-3-Clause"
 
 # Default command

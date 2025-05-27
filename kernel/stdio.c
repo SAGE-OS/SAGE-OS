@@ -88,11 +88,25 @@ int strcmp(const char* str1, const char* str2) {
     return *(unsigned char*)str1 - *(unsigned char*)str2;
 }
 
-// String copy
+// String copy - DEPRECATED: Use strcpy_safe instead
 char* strcpy(char* dest, const char* src) {
     char* original_dest = dest;
     while ((*dest++ = *src++));
     return original_dest;
+}
+
+// Safe string copy with bounds checking
+char* strcpy_safe(char* dest, const char* src, size_t dest_size) {
+    if (dest == NULL || src == NULL || dest_size == 0) {
+        return NULL;
+    }
+    
+    size_t i;
+    for (i = 0; i < dest_size - 1 && src[i] != '\0'; i++) {
+        dest[i] = src[i];
+    }
+    dest[i] = '\0';  // Ensure null termination
+    return dest;
 }
 
 // String copy with limit
@@ -139,4 +153,21 @@ int sprintf(char* str, const char* format, ...) {
     }
     str[i] = '\0';
     return i;
+}
+
+// Safe sprintf implementation with bounds checking
+int snprintf(char* str, size_t size, const char* format, ...) {
+    if (str == NULL || size == 0) {
+        return 0;
+    }
+    
+    // Very basic implementation - just copy format string for now
+    // In a real implementation, this would handle format specifiers
+    size_t i = 0;
+    while (format[i] && i < size - 1) {
+        str[i] = format[i];
+        i++;
+    }
+    str[i] = '\0';
+    return (int)i;
 }

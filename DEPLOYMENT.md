@@ -43,7 +43,7 @@ This guide covers deploying SAGE OS to various target platforms including Raspbe
 #### Method 1: Automated Script
 ```bash
 # Download deployment script
-curl -O https://raw.githubusercontent.com/hstream-app/SAGE-OS/main/deploy-pi.sh
+curl -O https://raw.githubusercontent.com/AshishYesale7/SAGE-OS/main/deploy-pi.sh
 chmod +x deploy-pi.sh
 
 # Deploy to SD card (replace /dev/sdX with your SD card device)

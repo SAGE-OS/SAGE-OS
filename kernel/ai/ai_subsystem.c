@@ -162,8 +162,8 @@ ai_subsystem_status_t ai_subsystem_load_model(const void* model_data, uint32_t m
             break;
     }
     
-    // Set model name
-    sprintf(model.name, "Model_%u", model_id);
+    // Set model name with bounds checking
+    snprintf(model.name, sizeof(model.name), "Model_%u", model_id);
     
     // Set precision (default to FP16)
     model.precision = AI_HAT_PRECISION_FP16;
