@@ -76,10 +76,12 @@
 // String functions
 size_t strlen(const char* str);
 int strcmp(const char* str1, const char* str2);
-char* strcpy(char* dest, const char* src);
+char* strcpy(char* dest, const char* src);  // DEPRECATED: Use strcpy_safe instead
+char* strcpy_safe(char* dest, const char* src, size_t dest_size);  // Safe string copy
 char* strncpy(char* dest, const char* src, size_t n);
 void* memset(void* ptr, int value, size_t num);
 void* memcpy(void* dest, const void* src, size_t n);
 int sprintf(char* str, const char* format, ...);
+int snprintf(char* str, size_t size, const char* format, ...);  // Safe sprintf
 
 #endif // STDIO_H

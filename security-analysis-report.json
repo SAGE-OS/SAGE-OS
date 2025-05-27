@@ -1,0 +1,133 @@
+{
+  "scan_date": "2025-05-27T19:02:58.240389",
+  "project": "SAGE OS",
+  "total_issues": 14,
+  "issues_by_severity": {
+    "critical": 0,
+    "high": 4,
+    "medium": 10,
+    "low": 0,
+    "info": 0
+  },
+  "detailed_findings": {
+    "critical": [],
+    "high": [
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "high",
+        "file": "kernel/stdio.c",
+        "line": 92,
+        "description": "Use of potentially unsafe function: strcpy",
+        "code": "char* strcpy(char* dest, const char* src) {"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "high",
+        "file": "kernel/stdio.c",
+        "line": 99,
+        "description": "Use of potentially unsafe function: strcpy",
+        "code": "char* strcpy_safe(char* dest, const char* src, size_t dest_size) {"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "high",
+        "file": "kernel/stdio.h",
+        "line": 79,
+        "description": "Use of potentially unsafe function: strcpy",
+        "code": "char* strcpy(char* dest, const char* src);  // DEPRECATED: Use strcpy_safe instead"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "high",
+        "file": "kernel/stdio.h",
+        "line": 80,
+        "description": "Use of potentially unsafe function: strcpy",
+        "code": "char* strcpy_safe(char* dest, const char* src, size_t dest_size);  // Safe string copy"
+      }
+    ],
+    "medium": [
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/stdio.c",
+        "line": 113,
+        "description": "Use of potentially unsafe function: strncpy",
+        "code": "char* strncpy(char* dest, const char* src, size_t n) {"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/stdio.c",
+        "line": 146,
+        "description": "Use of potentially unsafe function: sprintf",
+        "code": "int sprintf(char* str, const char* format, ...) {"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/stdio.c",
+        "line": 159,
+        "description": "Use of potentially unsafe function: snprintf",
+        "code": "int snprintf(char* str, size_t size, const char* format, ...) {"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/shell.c",
+        "line": 116,
+        "description": "Use of potentially unsafe function: strncpy",
+        "code": "strncpy(history[history_index], command, MAX_COMMAND_LENGTH - 1);"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/shell.c",
+        "line": 127,
+        "description": "Use of potentially unsafe function: strncpy",
+        "code": "strncpy(cmd_copy, command, MAX_COMMAND_LENGTH - 1);"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/ai/ai_subsystem.c",
+        "line": 166,
+        "description": "Use of potentially unsafe function: snprintf",
+        "code": "snprintf(model.name, sizeof(model.name), \"Model_%u\", model_id);"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/stdio.h",
+        "line": 81,
+        "description": "Use of potentially unsafe function: strncpy",
+        "code": "char* strncpy(char* dest, const char* src, size_t n);"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/stdio.h",
+        "line": 84,
+        "description": "Use of potentially unsafe function: sprintf",
+        "code": "int sprintf(char* str, const char* format, ...);"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/stdio.h",
+        "line": 85,
+        "description": "Use of potentially unsafe function: sprintf",
+        "code": "int snprintf(char* str, size_t size, const char* format, ...);  // Safe sprintf"
+      },
+      {
+        "type": "Buffer Overflow Risk",
+        "severity": "medium",
+        "file": "kernel/stdio.h",
+        "line": 85,
+        "description": "Use of potentially unsafe function: snprintf",
+        "code": "int snprintf(char* str, size_t size, const char* format, ...);  // Safe sprintf"
+      }
+    ],
+    "low": [],
+    "info": []
+  }
+}
