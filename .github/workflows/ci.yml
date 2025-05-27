@@ -216,11 +216,32 @@ jobs:
         run: |
           echo "📚 Building documentation..."
           if [ -f mkdocs.yml ]; then
-            mkdocs build
+            mkdocs build --verbose
           else
-            echo "⚠️ No mkdocs.yml found"
+            echo "⚠️ No mkdocs.yml found, creating basic documentation"
             mkdir -p site
-            echo "<h1>SAGE OS Documentation</h1><p>Documentation system not yet configured.</p>" > site/index.html
+            cat > site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>SAGE OS Documentation</title>
+              <meta charset="utf-8">
+              <style>
+                  body { font-family: Arial, sans-serif; margin: 40px; }
+                  h1 { color: #2c3e50; }
+                  .status { background: #e8f5e8; padding: 10px; border-radius: 5px; }
+              </style>
+          </head>
+          <body>
+              <h1>🚀 SAGE OS Documentation</h1>
+              <div class="status">
+                  <p>✅ Documentation system is being built...</p>
+                  <p>📚 Comprehensive documentation will be available soon.</p>
+                  <p>🔧 Build Date: $(date)</p>
+              </div>
+          </body>
+          </html>
+          EOF
           fi
 
       - name: Upload Documentation
