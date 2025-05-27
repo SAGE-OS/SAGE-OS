@@ -1,96 +1,28 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# SAGE OS — Copyright (c) 2025 Ashish Vasant Yesale (ashishyesale007@gmail.com)
-# SPDX-License-Identifier: BSD-3-Clause OR Proprietary
-# SAGE OS is dual-licensed under the BSD 3-Clause License and a Commercial License.
-# 
-# This file is part of the SAGE OS Project.
-# 
-# ─────────────────────────────────────────────────────────────────────────────
-# Licensing:
-# -----------
-# 
-# Licensed under the BSD 3-Clause License or a Commercial License.
-# You may use this file under the terms of either license as specified in:
-# 
-#    - BSD 3-Clause License (see ./LICENSE)
-#    - Commercial License (see ./COMMERCIAL_TERMS.md or contact legal@your.org)
-# 
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted under the BSD license provided that the
-# following conditions are met:
-# 
-#   * Redistributions of source code must retain the above copyright
-#     notice, this list of conditions and the following disclaimer.
-#   * Redistributions in binary form must reproduce the above copyright
-#     notice, this list of conditions and the following disclaimer in the
-#     documentation and/or other materials provided with the distribution.
-#   * Neither the name of the project nor the names of its contributors
-#     may be used to endorse or promote products derived from this
-#     software without specific prior written permission.
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-# IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-# TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
-# OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# 
-# By using this software, you agree to be bound by the terms of either license.
-# 
-# Alternatively, commercial use with extended rights is available — contact the author for commercial licensing.
-# 
-# ─────────────────────────────────────────────────────────────────────────────
-# Contributor Guidelines:
-# ------------------------
-# Contributions are welcome under the terms of the Developer Certificate of Origin (DCO).
-# All contributors must certify that they have the right to submit the code and agree to
-# release it under the above license terms.
-# 
-# Contributions must:
-#   - Be original or appropriately attributed
-#   - Include clear documentation and test cases where applicable
-#   - Respect the coding and security guidelines defined in CONTRIBUTING.md
-# 
-# ─────────────────────────────────────────────────────────────────────────────
-# Terms of Use and Disclaimer:
-# -----------------------------
-# This software is provided "as is", without any express or implied warranty.
-# In no event shall the authors, contributors, or copyright holders
-# be held liable for any damages arising from the use of this software.
-# 
-# Use of this software in critical systems (e.g., medical, nuclear, safety)
-# is entirely at your own risk unless specifically licensed for such purposes.
-# 
-# ─────────────────────────────────────────────────────────────────────────────
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 site_name: SAGE OS Documentation
-site_description: Comprehensive documentation for SAGE OS - A next-generation operating system
+site_description: Comprehensive documentation for SAGE OS - A modern, secure operating system with multi-architecture support
 site_author: Ashish Vasant Yesale
-site_url: https://nmc-techclub.github.io/SAGE-OS/
+site_url: https://nmc-techclub.github.io/SAGE-OS
 
+# Repository information
 repo_name: NMC-TechClub/SAGE-OS
 repo_url: https://github.com/NMC-TechClub/SAGE-OS
 edit_uri: edit/dev/docs/
 
+# Theme configuration
 theme:
   name: material
+  logo: assets/logo.png
+  favicon: assets/favicon.ico
   palette:
     - scheme: default
-      primary: deep purple
-      accent: purple
+      primary: blue grey
+      accent: deep orange
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
-      primary: deep purple
-      accent: purple
+      primary: blue grey
+      accent: deep orange
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -99,88 +31,143 @@ theme:
     - navigation.sections
     - navigation.expand
     - navigation.top
+    - navigation.tracking
+    - navigation.indexes
     - search.highlight
     - search.share
-    - content.code.annotate
+    - search.suggest
     - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - toc.follow
+    - toc.integrate
 
-markdown_extensions:
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.tabbed:
-      alternate_style: true
-  - tables
-  - toc:
-      permalink: true
-
+# Navigation structure
 nav:
-  - Home: index.md
+  - Home: 
+    - Overview: index.md
+    - Features: home/features.md
+    - Roadmap: home/roadmap.md
+    - License: home/license.md
+  
   - Getting Started:
-    - Overview: getting-started/overview.md
     - Installation: getting-started/installation.md
-    - Quick Start: getting-started/quick-start.md
+    - Quick Start: getting-started/quickstart.md
     - Building from Source: getting-started/building.md
+    - Development Environment: getting-started/development-setup.md
+    - First Boot: getting-started/first-boot.md
+  
   - Architecture:
     - System Overview: architecture/overview.md
-    - Kernel Design: architecture/kernel.md
+    - Boot Process: architecture/boot-process.md
+    - Kernel Architecture: architecture/kernel.md
     - Memory Management: architecture/memory.md
     - Process Management: architecture/processes.md
     - File System: architecture/filesystem.md
     - Device Drivers: architecture/drivers.md
-    - Security Model: architecture/security.md
+    - Multi-Architecture Support: architecture/multi-arch.md
+  
+  - Components:
+    - Bootloader: components/bootloader.md
+    - Kernel Core: components/kernel-core.md
+    - System Libraries: components/libraries.md
+    - User Space: components/userspace.md
+    - Build System: components/build-system.md
+  
   - Development:
-    - Development Guide: development/guide.md
-    - API Reference: development/api.md
-    - Kernel Modules: development/modules.md
-    - Device Drivers: development/drivers.md
-    - Testing: development/testing.md
+    - Contributing: development/contributing.md
+    - Coding Standards: development/coding-standards.md
+    - Testing Framework: development/testing.md
     - Debugging: development/debugging.md
+    - Performance: development/performance.md
+    - Cross-Compilation: development/cross-compilation.md
+  
   - Security:
     - Security Overview: security/overview.md
     - Vulnerability Management: security/vulnerabilities.md
-    - CVE Analysis: security/cve-analysis.md
-    - Security Best Practices: security/best-practices.md
+    - CVE Scanning: security/cve-scanning.md
+    - Best Practices: security/best-practices.md
+    - Secure Boot: security/secure-boot.md
     - Threat Model: security/threat-model.md
-  - Multi-Architecture:
-    - Architecture Support: multi-arch/overview.md
-    - x86_64: multi-arch/x86_64.md
-    - ARM64: multi-arch/arm64.md
-    - RISC-V: multi-arch/riscv.md
-    - Cross-Compilation: multi-arch/cross-compilation.md
-  - Advanced Features:
-    - Quantum Computing: advanced/quantum.md
-    - AI Integration: advanced/ai.md
-    - GPU Computing: advanced/gpu.md
-    - Real-time Systems: advanced/realtime.md
+  
+  - File Reference:
+    - Project Structure: files/project-structure.md
+    - Source Code: files/source-code.md
+    - Configuration Files: files/configuration.md
+    - Build Scripts: files/build-scripts.md
+    - Documentation Files: files/documentation.md
+  
+  - API Reference:
+    - Kernel API: api/kernel.md
+    - System Calls: api/syscalls.md
+    - Driver Interface: api/drivers.md
+    - Boot Protocol: api/boot-protocol.md
+    - Memory API: api/memory.md
+  
+  - Tutorials:
+    - Building Your First Module: tutorials/first-module.md
+    - Adding a Device Driver: tutorials/device-driver.md
+    - Porting to New Architecture: tutorials/porting.md
+    - Performance Optimization: tutorials/optimization.md
+  
   - Troubleshooting:
     - Common Issues: troubleshooting/common-issues.md
-    - Boot Problems: troubleshooting/boot.md
+    - Build Problems: troubleshooting/build-problems.md
+    - Boot Failures: troubleshooting/boot-failures.md
     - Performance Issues: troubleshooting/performance.md
-    - Hardware Compatibility: troubleshooting/hardware.md
-  - Contributing:
-    - Contribution Guide: contributing/guide.md
-    - Code Style: contributing/style.md
-    - Testing Guidelines: contributing/testing.md
-    - Documentation: contributing/documentation.md
-  - Reference:
-    - System Calls: reference/syscalls.md
-    - Configuration: reference/configuration.md
-    - File Formats: reference/file-formats.md
-    - Error Codes: reference/error-codes.md
+    - FAQ: troubleshooting/faq.md
 
+# Plugins
 plugins:
-  - search
+  - search:
+      lang: en
   - mkdocstrings:
       handlers:
         python:
           options:
             docstring_style: google
 
+# Markdown extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+      title: On this page
+
+# Extra CSS and JavaScript
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+# Social links
 extra:
   social:
     - icon: fontawesome/brands/github
@@ -188,4 +175,6 @@ extra:
     - icon: fontawesome/solid/envelope
       link: mailto:ashishyesale007@gmail.com
 
-copyright: Copyright &copy; 2025 Ashish Vasant Yesale. Licensed under BSD-3-Clause OR Proprietary.
+# Copyright
+copyright: |
+  Copyright &copy; 2025 Ashish Vasant Yesale - SAGE OS Project

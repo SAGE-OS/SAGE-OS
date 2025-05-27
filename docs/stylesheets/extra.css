@@ -1,0 +1,311 @@
+/* SAGE OS Documentation Custom Styles */
+
+:root {
+  --sage-primary: #1976d2;
+  --sage-accent: #ff5722;
+  --sage-success: #4caf50;
+  --sage-warning: #ff9800;
+  --sage-error: #f44336;
+  --sage-info: #2196f3;
+}
+
+/* Custom color scheme */
+[data-md-color-scheme="sage"] {
+  --md-primary-fg-color: var(--sage-primary);
+  --md-accent-fg-color: var(--sage-accent);
+}
+
+/* Logo styling */
+.md-header__button.md-logo img {
+  height: 32px;
+  width: auto;
+}
+
+/* Custom admonitions */
+.md-typeset .admonition.sage {
+  border-color: var(--sage-primary);
+}
+
+.md-typeset .admonition.sage > .admonition-title {
+  background-color: var(--sage-primary);
+  color: white;
+}
+
+/* Code block enhancements */
+.md-typeset .highlight .filename {
+  background-color: var(--md-code-bg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color--light);
+  font-size: 0.85em;
+  padding: 0.5rem 1rem;
+  margin: 0;
+}
+
+/* Architecture badges */
+.arch-badge {
+  display: inline-block;
+  padding: 0.2em 0.6em;
+  margin: 0.1em;
+  border-radius: 0.25em;
+  font-size: 0.75em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.arch-badge.x86_64 {
+  background-color: #2196f3;
+  color: white;
+}
+
+.arch-badge.arm64 {
+  background-color: #4caf50;
+  color: white;
+}
+
+.arch-badge.riscv {
+  background-color: #ff9800;
+  color: white;
+}
+
+/* Status indicators */
+.status-indicator {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  margin-right: 0.5em;
+}
+
+.status-indicator.stable {
+  background-color: var(--sage-success);
+}
+
+.status-indicator.beta {
+  background-color: var(--sage-warning);
+}
+
+.status-indicator.alpha {
+  background-color: var(--sage-error);
+}
+
+/* Grid cards enhancement */
+.md-typeset .grid.cards > ol > li,
+.md-typeset .grid.cards > ul > li {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.md-typeset .grid.cards > ol > li:hover,
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--sage-primary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+  text-align: center;
+  margin: 1em 0;
+}
+
+/* Table enhancements */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--sage-primary);
+  color: white;
+  font-weight: bold;
+}
+
+/* Button enhancements */
+.md-button {
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.md-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Progress bars */
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: var(--md-default-fg-color--lightest);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0.5em 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--sage-primary);
+  transition: width 0.3s ease;
+}
+
+/* Security level indicators */
+.security-level {
+  display: inline-block;
+  padding: 0.2em 0.8em;
+  border-radius: 1em;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.security-level.critical {
+  background-color: var(--sage-error);
+  color: white;
+}
+
+.security-level.high {
+  background-color: var(--sage-warning);
+  color: white;
+}
+
+.security-level.medium {
+  background-color: var(--sage-info);
+  color: white;
+}
+
+.security-level.low {
+  background-color: var(--sage-success);
+  color: white;
+}
+
+/* Architecture comparison table */
+.arch-comparison {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.arch-comparison th,
+.arch-comparison td {
+  padding: 0.75em;
+  text-align: center;
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.arch-comparison th {
+  background-color: var(--sage-primary);
+  color: white;
+}
+
+.arch-comparison .feature-supported {
+  color: var(--sage-success);
+  font-weight: bold;
+}
+
+.arch-comparison .feature-partial {
+  color: var(--sage-warning);
+  font-weight: bold;
+}
+
+.arch-comparison .feature-unsupported {
+  color: var(--sage-error);
+  font-weight: bold;
+}
+
+/* Code language indicators */
+.code-lang {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  background-color: var(--sage-primary);
+  color: white;
+  padding: 0.2em 0.5em;
+  border-radius: 0.25em;
+  font-size: 0.7em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .md-typeset .grid.cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .arch-comparison {
+    font-size: 0.8em;
+  }
+  
+  .arch-comparison th,
+  .arch-comparison td {
+    padding: 0.5em;
+  }
+}
+
+/* Print styles */
+@media print {
+  .md-header,
+  .md-sidebar,
+  .md-footer {
+    display: none !important;
+  }
+  
+  .md-content {
+    margin: 0 !important;
+  }
+  
+  .mermaid {
+    break-inside: avoid;
+  }
+}
+
+/* Dark mode adjustments */
+[data-md-color-scheme="slate"] {
+  --sage-primary: #42a5f5;
+  --sage-accent: #ff7043;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: var(--sage-primary);
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Highlight boxes */
+.highlight-box {
+  background-color: var(--md-accent-fg-color--transparent);
+  border-left: 4px solid var(--md-accent-fg-color);
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 0 0.5em 0.5em 0;
+}
+
+.highlight-box.info {
+  background-color: rgba(33, 150, 243, 0.1);
+  border-left-color: var(--sage-info);
+}
+
+.highlight-box.warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  border-left-color: var(--sage-warning);
+}
+
+.highlight-box.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-left-color: var(--sage-success);
+}
+
+.highlight-box.error {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-left-color: var(--sage-error);
+}

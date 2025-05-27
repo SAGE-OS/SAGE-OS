@@ -86,7 +86,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Up Environment
         run: |
@@ -118,7 +118,7 @@ jobs:
           python3 quantum/report_results.py
           
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: quantum-gpu-results
           path: results/

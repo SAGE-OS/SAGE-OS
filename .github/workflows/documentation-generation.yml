@@ -90,7 +90,7 @@ jobs:
 
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python Environment
         run: |
@@ -127,7 +127,7 @@ jobs:
           mkdocs build  # Build the docs locally
           
       - name: Upload Documentation Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sage-os-documentation
           path: site/
