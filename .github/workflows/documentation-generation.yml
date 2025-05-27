@@ -76,9 +76,11 @@ on:
   push:
     branches:
       - main
+      - dev
     paths:
       - 'docs/**'  # Triggered when any docs-related files are modified
       - '**/*.py'  # Also runs when code files are updated (to extract docstrings)
+      - 'mkdocs.yml'  # Also when mkdocs config changes
   workflow_dispatch:
 
 jobs:
@@ -95,10 +97,33 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y python3-pip
           pip3 install --upgrade pip
-          pip install mkdocs mkdocs-material
+          pip install mkdocs mkdocs-material mkdocstrings mkdocstrings-python
+
+      - name: Create index.md if missing
+        run: |
+          if [ ! -f docs/index.md ]; then
+            mkdir -p docs
+            echo "# SAGE OS Documentation" > docs/index.md
+            echo "" >> docs/index.md
+            echo "Welcome to the SAGE OS documentation!" >> docs/index.md
+            echo "" >> docs/index.md
+            echo "This documentation is automatically generated from the project files." >> docs/index.md
+          fi
 
       - name: Generate Documentation with MkDocs
         run: |
+          # Ensure all required directories exist
+          mkdir -p docs/getting-started docs/architecture docs/development docs/security
+          mkdir -p docs/multi-arch docs/advanced docs/troubleshooting docs/contributing docs/reference
+          
+          # Create placeholder files for missing documentation
+          for dir in getting-started architecture development security multi-arch advanced troubleshooting contributing reference; do
+            if [ ! -f "docs/$dir/overview.md" ] && [ ! -f "docs/$dir/guide.md" ]; then
+              echo "# $dir" > "docs/$dir/overview.md"
+              echo "Documentation for $dir is being developed." >> "docs/$dir/overview.md"
+            fi
+          done
+          
           mkdocs build  # Build the docs locally
           
       - name: Deploy Documentation to GitHub Pages

@@ -1,0 +1,119 @@
+site_name: SAGE OS Documentation
+site_description: Comprehensive documentation for SAGE OS - A next-generation operating system
+site_author: Ashish Vasant Yesale
+site_url: https://nmc-techclub.github.io/SAGE-OS/
+
+repo_name: NMC-TechClub/SAGE-OS
+repo_url: https://github.com/NMC-TechClub/SAGE-OS
+edit_uri: edit/dev/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.annotate
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Overview: getting-started/overview.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+    - Building from Source: getting-started/building.md
+  - Architecture:
+    - System Overview: architecture/overview.md
+    - Kernel Design: architecture/kernel.md
+    - Memory Management: architecture/memory.md
+    - Process Management: architecture/processes.md
+    - File System: architecture/filesystem.md
+    - Device Drivers: architecture/drivers.md
+    - Security Model: architecture/security.md
+  - Development:
+    - Development Guide: development/guide.md
+    - API Reference: development/api.md
+    - Kernel Modules: development/modules.md
+    - Device Drivers: development/drivers.md
+    - Testing: development/testing.md
+    - Debugging: development/debugging.md
+  - Security:
+    - Security Overview: security/overview.md
+    - Vulnerability Management: security/vulnerabilities.md
+    - CVE Analysis: security/cve-analysis.md
+    - Security Best Practices: security/best-practices.md
+    - Threat Model: security/threat-model.md
+  - Multi-Architecture:
+    - Architecture Support: multi-arch/overview.md
+    - x86_64: multi-arch/x86_64.md
+    - ARM64: multi-arch/arm64.md
+    - RISC-V: multi-arch/riscv.md
+    - Cross-Compilation: multi-arch/cross-compilation.md
+  - Advanced Features:
+    - Quantum Computing: advanced/quantum.md
+    - AI Integration: advanced/ai.md
+    - GPU Computing: advanced/gpu.md
+    - Real-time Systems: advanced/realtime.md
+  - Troubleshooting:
+    - Common Issues: troubleshooting/common-issues.md
+    - Boot Problems: troubleshooting/boot.md
+    - Performance Issues: troubleshooting/performance.md
+    - Hardware Compatibility: troubleshooting/hardware.md
+  - Contributing:
+    - Contribution Guide: contributing/guide.md
+    - Code Style: contributing/style.md
+    - Testing Guidelines: contributing/testing.md
+    - Documentation: contributing/documentation.md
+  - Reference:
+    - System Calls: reference/syscalls.md
+    - Configuration: reference/configuration.md
+    - File Formats: reference/file-formats.md
+    - Error Codes: reference/error-codes.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/NMC-TechClub/SAGE-OS
+    - icon: fontawesome/solid/envelope
+      link: mailto:ashishyesale007@gmail.com
+
+copyright: Copyright &copy; 2025 Ashish Vasant Yesale. Licensed under BSD-3-Clause OR Proprietary.

@@ -74,14 +74,14 @@ name: License Headers
 
 on:
   push:
-    branches: [ main, origin, rpi5-os-implementation ]
+    branches: [ main, dev, origin, rpi5-os-implementation ]
     paths-ignore:
       - '**.md'
       - 'LICENSE'
       - '.gitignore'
       - '.github/workflows/**'
   pull_request:
-    branches: [ main, origin ]
+    branches: [ main, dev, origin ]
     paths-ignore:
       - '**.md'
       - 'LICENSE'
@@ -114,7 +114,7 @@ jobs:
         id: check-headers
         continue-on-error: true
         run: |
-          if python apply-license-headers.py --dry-run | grep -q "Would add license"; then
+          if python .github/apply-license-headers.py --dry-run | grep -q "Would add license"; then
             echo "Missing license headers detected"
             echo "missing_headers=true" >> $GITHUB_OUTPUT
           else
@@ -126,7 +126,7 @@ jobs:
         if: steps.check-headers.outputs.missing_headers == 'true'
         run: |
           # Add license headers to files
-          python apply-license-headers.py
+          python .github/apply-license-headers.py
           
           # Configure git
           git config --global user.name "SAGE OS Bot"
