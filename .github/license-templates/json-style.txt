@@ -1,0 +1,8 @@
+{
+  "_comment": "─────────────────────────────────────────────────────────────────────────────",
+  "_license": "SAGE OS — Copyright (c) 2025 Ashish Vasant Yesale (ashishyesale007@gmail.com)",
+  "_spdx": "BSD-3-Clause OR Proprietary",
+  "_description": "SAGE OS is dual-licensed under the BSD 3-Clause License and a Commercial License.",
+  "_project": "This file is part of the SAGE OS Project.",
+  "_separator": "─────────────────────────────────────────────────────────────────────────────"
+}

@@ -20,45 +20,60 @@ from pathlib import Path
 
 # File extension to template mapping
 EXTENSION_TEMPLATES = {
-    '.c': 'c-cpp.txt',
-    '.h': 'c-cpp.txt',
-    '.cpp': 'c-cpp.txt',
-    '.cxx': 'c-cpp.txt',
-    '.cc': 'c-cpp.txt',
-    '.hpp': 'c-cpp.txt',
-    '.hxx': 'c-cpp.txt',
-    '.py': 'python.txt',
-    '.sh': 'shell.txt',
-    '.bash': 'shell.txt',
-    '.rb': 'ruby.txt',
-    '.pl': 'perl.txt',
-    '.pm': 'perl.txt',
-    '.js': 'javascript.txt',
-    '.ts': 'javascript.txt',
-    '.jsx': 'javascript.txt',
-    '.tsx': 'javascript.txt',
-    '.S': 'assembly.txt',
-    '.s': 'assembly.txt',
-    '.asm': 'assembly.txt',
-    '.java': 'java.txt',
-    '.go': 'go.txt',
-    '.rs': 'rust.txt',
-    '.php': 'python.txt',  # Uses # comments
-    '.yaml': 'python.txt',  # Uses # comments
-    '.yml': 'python.txt',   # Uses # comments
-    '.toml': 'python.txt',  # Uses # comments
-    '.ini': 'python.txt',   # Uses # comments
-    '.cfg': 'python.txt',   # Uses # comments
-    '.conf': 'python.txt',  # Uses # comments
+    '.c': 'c-style.txt',
+    '.h': 'c-style.txt',
+    '.cpp': 'cpp-style.txt',
+    '.cxx': 'cpp-style.txt',
+    '.cc': 'cpp-style.txt',
+    '.hpp': 'cpp-style.txt',
+    '.hxx': 'cpp-style.txt',
+    '.py': 'python-style.txt',
+    '.sh': 'hash-style.txt',
+    '.bash': 'hash-style.txt',
+    '.rb': 'ruby-style.txt',
+    '.pl': 'perl-style.txt',
+    '.pm': 'perl-style.txt',
+    '.js': 'javascript-style.txt',
+    '.ts': 'typescript-style.txt',
+    '.jsx': 'javascript-style.txt',
+    '.tsx': 'typescript-style.txt',
+    '.S': 'assembly-style.txt',
+    '.s': 'assembly-style.txt',
+    '.asm': 'assembly-style.txt',
+    '.java': 'java-style.txt',
+    '.go': 'go-style.txt',
+    '.rs': 'rust-style.txt',
+    '.php': 'php-style.txt',
+    '.yaml': 'yaml-style.txt',
+    '.yml': 'yaml-style.txt',
+    '.toml': 'toml-style.txt',
+    '.ini': 'ini-style.txt',
+    '.cfg': 'ini-style.txt',
+    '.conf': 'ini-style.txt',
+    '.css': 'css-style.txt',
+    '.scss': 'scss-style.txt',
+    '.kt': 'kotlin-style.txt',
+    '.scala': 'scala-style.txt',
+    '.cs': 'csharp-style.txt',
+    '.swift': 'swift-style.txt',
+    '.dart': 'dart-style.txt',
+    '.ex': 'elixir-style.txt',
+    '.exs': 'elixir-style.txt',
+    '.clj': 'clojure-style.txt',
+    '.cljs': 'clojure-style.txt',
+    '.r': 'r-style.txt',
+    '.R': 'r-style.txt',
+    '.groovy': 'groovy-style.txt',
+    '.gradle': 'gradle-style.txt',
 }
 
 # Special file names
 SPECIAL_FILES = {
-    'Makefile': 'makefile.txt',
-    'makefile': 'makefile.txt',
-    'GNUmakefile': 'makefile.txt',
-    'CMakeLists.txt': 'python.txt',
-    'Dockerfile': 'python.txt',
+    'Makefile': 'makefile-style.txt',
+    'makefile': 'makefile-style.txt',
+    'GNUmakefile': 'makefile-style.txt',
+    'CMakeLists.txt': 'cmake-style.txt',
+    'Dockerfile': 'dockerfile-style.txt',
 }
 
 # Files to skip
@@ -102,7 +117,7 @@ def get_template_for_file(file_path):
 
 def load_template(template_name):
     """Load a license template from the templates directory."""
-    template_path = os.path.join('license-templates', template_name)
+    template_path = os.path.join('.github', 'license-templates', template_name)
     if not os.path.exists(template_path):
         print(f"Warning: Template not found: {template_path}")
         return None
