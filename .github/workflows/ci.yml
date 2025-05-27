@@ -210,7 +210,10 @@ jobs:
 
       - name: Install Documentation Dependencies
         run: |
-          pip install mkdocs mkdocs-material mkdocstrings mkdocs-mermaid2-plugin
+          pip install --upgrade pip
+          pip install mkdocs mkdocs-material mkdocstrings[python] mkdocs-mermaid2-plugin
+          pip install pymdown-extensions mkdocs-git-revision-date-localized-plugin
+          pip install mkdocs-minify-plugin mkdocs-macros-plugin || true
 
       - name: Build Documentation
         run: |
