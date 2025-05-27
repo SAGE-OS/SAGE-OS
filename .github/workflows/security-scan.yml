@@ -59,7 +59,7 @@ jobs:
         
     - name: Update CVE Database
       run: |
-        cve-bin-tool --update
+        cve-bin-tool --update now
         
     - name: Download build artifacts
       uses: actions/download-artifact@v4
