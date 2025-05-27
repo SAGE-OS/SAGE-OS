@@ -53,7 +53,7 @@ brew install qemu
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/hstream-app/SAGE-OS.git
+git clone https://github.com/AshishYesale7/SAGE-OS.git
 cd SAGE-OS
 ```
 

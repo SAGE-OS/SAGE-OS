@@ -588,8 +588,8 @@ Include the following information:
 - **Steps to reproduce**
 
 ### Support Channels
-- **GitHub Issues**: [SAGE-OS Issues](https://github.com/NMC-TechClub/SAGE-OS/issues)
-- **GitHub Discussions**: [SAGE-OS Discussions](https://github.com/NMC-TechClub/SAGE-OS/discussions)
+- **GitHub Issues**: [SAGE-OS Issues](https://github.com/AshishYesale7/SAGE-OS/issues)
+- **GitHub Discussions**: [SAGE-OS Discussions](https://github.com/AshishYesale7/SAGE-OS/discussions)
 - **Email**: ashishyesale007@gmail.com
 
 ### Useful Commands for Bug Reports

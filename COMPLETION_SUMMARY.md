@@ -231,14 +231,14 @@ theme:
 ### 📞 SUPPORT AND CONTACT
 
 #### Project Information
-- **Repository**: [NMC-TechClub/SAGE-OS](https://github.com/NMC-TechClub/SAGE-OS)
+- **Repository**: [AshishYesale7/SAGE-OS](https://github.com/AshishYesale7/SAGE-OS)
 - **Documentation**: [GitHub Pages](https://nmc-techclub.github.io/SAGE-OS/)
 - **Author**: Ashish Vasant Yesale
 - **Email**: ashishyesale007@gmail.com
 
 #### Getting Help
-- **Issues**: [GitHub Issues](https://github.com/NMC-TechClub/SAGE-OS/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/NMC-TechClub/SAGE-OS/discussions)
+- **Issues**: [GitHub Issues](https://github.com/AshishYesale7/SAGE-OS/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/AshishYesale7/SAGE-OS/discussions)
 - **Documentation**: Comprehensive guides available
 - **Email Support**: Direct contact available
 
@@ -570,7 +570,7 @@ SAGE-OS/
 
 **Author**: Ashish Vasant Yesale  
 **Email**: ashishyesale007@gmail.com  
-**Repository**: https://github.com/NMC-TechClub/SAGE-OS  
+**Repository**: https://github.com/AshishYesale7/SAGE-OS  
 **Branch**: dev (all changes pushed successfully)
 
 ## 🎉 Conclusion

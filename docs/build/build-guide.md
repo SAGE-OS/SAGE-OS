@@ -14,7 +14,7 @@ sudo apt install gcc-aarch64-linux-gnu gcc-riscv64-linux-gnu
 
 ### Build All Architectures
 ```bash
-git clone https://github.com/NMC-TechClub/SAGE-OS.git
+git clone https://github.com/AshishYesale7/SAGE-OS.git
 cd SAGE-OS
 ./build-all-working.sh
 ```

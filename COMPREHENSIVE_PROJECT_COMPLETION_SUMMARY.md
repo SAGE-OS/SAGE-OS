@@ -270,7 +270,7 @@ This document summarizes the comprehensive development work completed on SAGE OS
 ### Contact Information
 - **Primary Developer**: Ashish Vasant Yesale
 - **Email**: ashishyesale007@gmail.com
-- **Repository**: https://github.com/NMC-TechClub/SAGE-OS
+- **Repository**: https://github.com/AshishYesale7/SAGE-OS
 - **Branch**: dev (all changes pushed)
 
 ### Maintenance Schedule
@@ -316,4 +316,4 @@ The SAGE OS project is now ready for production use with a strong security found
 **Completion Date**: 2025-05-27  
 **Total Development Time**: Comprehensive security and infrastructure overhaul  
 **Developer**: Ashish Vasant Yesale <ashishyesale007@gmail.com>  
-**Repository**: https://github.com/NMC-TechClub/SAGE-OS (dev branch)
+**Repository**: https://github.com/AshishYesale7/SAGE-OS (dev branch)

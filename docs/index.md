@@ -76,7 +76,7 @@
   <h1>🚀 SAGE OS</h1>
   <p><strong>A Modern, Secure, Multi-Architecture Operating System</strong></p>
   
-  [![Build Status](https://github.com/NMC-TechClub/SAGE-OS/workflows/CI/badge.svg)](https://github.com/NMC-TechClub/SAGE-OS/actions)
+  [![Build Status](https://github.com/AshishYesale7/SAGE-OS/workflows/CI/badge.svg)](https://github.com/AshishYesale7/SAGE-OS/actions)
   [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE)
   [![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://nmc-techclub.github.io/SAGE-OS/)
   [![Security](https://img.shields.io/badge/security-CVE%20scanned-green.svg)](security/cve-scanning.md)
@@ -122,7 +122,7 @@ Get up and running with SAGE OS in minutes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/NMC-TechClub/SAGE-OS.git
+git clone https://github.com/AshishYesale7/SAGE-OS.git
 cd SAGE-OS
 
 # Build for your architecture
@@ -340,8 +340,8 @@ We use automated tools to continuously monitor for security vulnerabilities:
 
 ### Get Involved
 
-- **💬 Discussions**: Join our [GitHub Discussions](https://github.com/NMC-TechClub/SAGE-OS/discussions)
-- **🐛 Issues**: Report bugs on [GitHub Issues](https://github.com/NMC-TechClub/SAGE-OS/issues)
+- **💬 Discussions**: Join our [GitHub Discussions](https://github.com/AshishYesale7/SAGE-OS/discussions)
+- **🐛 Issues**: Report bugs on [GitHub Issues](https://github.com/AshishYesale7/SAGE-OS/issues)
 - **📧 Contact**: Reach out to [ashishyesale007@gmail.com](mailto:ashishyesale007@gmail.com)
 
 ### Contributing

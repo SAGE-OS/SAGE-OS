@@ -262,7 +262,7 @@ timeline
 
     Source code, issues, and discussions
 
-    [Visit Repository](https://github.com/NMC-TechClub/SAGE-OS){ .md-button .md-button--primary }
+    [Visit Repository](https://github.com/AshishYesale7/SAGE-OS){ .md-button .md-button--primary }
 
 -   :material-email: **Contact**
 

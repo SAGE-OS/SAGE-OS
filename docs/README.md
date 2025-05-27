@@ -103,8 +103,8 @@ SAGE-OS/
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/NMC-TechClub/SAGE-OS/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/NMC-TechClub/SAGE-OS/discussions)
+- **Issues**: [GitHub Issues](https://github.com/AshishYesale7/SAGE-OS/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/AshishYesale7/SAGE-OS/discussions)
 - **Email**: ashishyesale007@gmail.com
 
 ## 📄 License

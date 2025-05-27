@@ -76,8 +76,8 @@ site_author: Ashish Vasant Yesale
 site_url: https://nmc-techclub.github.io/SAGE-OS
 
 # Repository information
-repo_name: NMC-TechClub/SAGE-OS
-repo_url: https://github.com/NMC-TechClub/SAGE-OS
+repo_name: AshishYesale7/SAGE-OS
+repo_url: https://github.com/AshishYesale7/SAGE-OS
 edit_uri: edit/dev/docs/
 
 # Theme configuration
@@ -243,7 +243,7 @@ extra_javascript:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/NMC-TechClub/SAGE-OS
+      link: https://github.com/AshishYesale7/SAGE-OS
     - icon: fontawesome/solid/envelope
       link: mailto:ashishyesale007@gmail.com
 

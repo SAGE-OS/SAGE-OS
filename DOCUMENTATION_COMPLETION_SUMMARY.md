@@ -271,7 +271,7 @@ This documentation system sets a new standard for open-source project documentat
 **Project Completed**: 2025-05-27  
 **Author**: Ashish Vasant Yesale  
 **Email**: ashishyesale007@gmail.com  
-**Repository**: [NMC-TechClub/SAGE-OS](https://github.com/NMC-TechClub/SAGE-OS)  
+**Repository**: [AshishYesale7/SAGE-OS](https://github.com/AshishYesale7/SAGE-OS)  
 **Documentation Site**: [GitHub Pages](https://nmc-techclub.github.io/SAGE-OS/)  
 
 *This comprehensive documentation system represents a significant achievement in technical documentation, providing a template for other open-source projects to follow.*

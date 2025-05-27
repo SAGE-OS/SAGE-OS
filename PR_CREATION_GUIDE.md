@@ -107,14 +107,14 @@ This fix enables the complete multi-architecture build system to work correctly.
 ### 🎯 Next Steps
 
 #### Option 1: Manual PR Creation
-1. Go to: https://github.com/hstream-app/SAGE-OS/compare
+1. Go to: https://github.com/AshishYesale7/SAGE-OS/compare
 2. Set base branch to: `origin`
 3. Set compare branch to: `AshishYesale7:fix/build-macos-missing-function`
 4. Use the title and description above
 
 #### Option 2: Direct URL (if branch is pushed)
 ```
-https://github.com/hstream-app/SAGE-OS/compare/origin...AshishYesale7:SAGE-OS:fix/build-macos-missing-function
+https://github.com/AshishYesale7/SAGE-OS/compare/origin...AshishYesale7:SAGE-OS:fix/build-macos-missing-function
 ```
 
 ### 📊 Impact Summary

@@ -377,7 +377,7 @@ python3 scripts/cve_scanner.py --no-docker
 
 2. **Clone Repository**:
    ```bash
-   git clone https://github.com/NMC-TechClub/SAGE-OS.git
+   git clone https://github.com/AshishYesale7/SAGE-OS.git
    cd SAGE-OS
    ```
 
@@ -544,4 +544,4 @@ A: SAGE OS is dual-licensed under BSD 3-Clause and Commercial licenses. See [LIC
 
 ---
 
-For more information, visit the [SAGE OS GitHub repository](https://github.com/NMC-TechClub/SAGE-OS) or contact the development team.
+For more information, visit the [SAGE OS GitHub repository](https://github.com/AshishYesale7/SAGE-OS) or contact the development team.

@@ -162,7 +162,7 @@ rustup component add llvm-tools-preview
 
 ```bash
 # Clone the main repository
-git clone https://github.com/NMC-TechClub/SAGE-OS.git
+git clone https://github.com/AshishYesale7/SAGE-OS.git
 cd SAGE-OS
 
 # Switch to development branch
@@ -410,8 +410,8 @@ make build V=1
 ### Getting Help
 
 - **Documentation**: Check the [troubleshooting guide](../troubleshooting/common-issues.md)
-- **Issues**: Report bugs on [GitHub Issues](https://github.com/NMC-TechClub/SAGE-OS/issues)
-- **Discussions**: Join [GitHub Discussions](https://github.com/NMC-TechClub/SAGE-OS/discussions)
+- **Issues**: Report bugs on [GitHub Issues](https://github.com/AshishYesale7/SAGE-OS/issues)
+- **Discussions**: Join [GitHub Discussions](https://github.com/AshishYesale7/SAGE-OS/discussions)
 - **Email**: Contact [ashishyesale007@gmail.com](mailto:ashishyesale007@gmail.com)
 
 ## 📊 Installation Verification

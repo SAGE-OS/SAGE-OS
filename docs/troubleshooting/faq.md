@@ -136,7 +136,7 @@ sudo dd if=dist/sage-os-x86_64.iso of=/dev/sdX bs=4M status=progress
 **A:** Follow these steps:
 ```bash
 # Clone repository
-git clone https://github.com/NMC-TechClub/SAGE-OS.git
+git clone https://github.com/AshishYesale7/SAGE-OS.git
 cd SAGE-OS
 
 # Install dependencies
