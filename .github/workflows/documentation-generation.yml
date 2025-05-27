@@ -126,16 +126,22 @@ jobs:
           
           mkdocs build  # Build the docs locally
           
-      - name: Deploy Documentation to GitHub Pages
-        if: github.event_name == 'push'  # Only deploy on push event
-        run: |
-          mkdocs gh-deploy --force  # Deploy to GitHub Pages
-        env:
-          MKDOCS_DEPLOY: true
-          
       - name: Upload Documentation Artifacts
-        if: github.event_name == 'workflow_dispatch'  # Only upload artifacts if manual trigger
         uses: actions/upload-artifact@v3
         with:
-          name: docs
+          name: sage-os-documentation
           path: site/
+          retention-days: 30
+          
+      - name: Create Documentation Summary
+        run: |
+          echo "## 📚 Documentation Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Documentation successfully built with MkDocs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Build Statistics:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Pages**: $(find site -name "*.html" | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Size**: $(du -sh site | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Time**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Documentation artifacts have been uploaded and are available for download." >> $GITHUB_STEP_SUMMARY
