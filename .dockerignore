@@ -1,0 +1,96 @@
+# Git files
+.git
+.gitignore
+.gitmodules
+.gitattributes
+
+# Build artifacts (will be created during build)
+build/
+dist/
+*.o
+*.a
+*.so
+*.elf
+*.bin
+*.img
+*.iso
+
+# Documentation
+docs/
+*.md
+LICENSE
+CONTRIBUTING.md
+CHANGELOG.md
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.log
+
+# Cache directories
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+
+# Node modules (if any)
+node_modules/
+
+# Python virtual environments
+venv/
+env/
+.env
+
+# Test files
+test/
+tests/
+*_test.*
+*_test_*
+
+# CI/CD files (not needed in container)
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Package files
+*.deb
+*.rpm
+*.tar.gz
+*.zip
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# OS generated files
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Large binary files that shouldn't be in containers
+*.qcow2
+*.vmdk
+*.vdi
+*.vhd
+
+# Security sensitive files
+*.key
+*.pem
+*.crt
+secrets/
+.secrets/
