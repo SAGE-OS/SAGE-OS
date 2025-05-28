@@ -11,6 +11,10 @@ ARCH ?= aarch64
 # Set up cross-compilation toolchain based on architecture
 ifeq ($(ARCH),x86_64)
     CROSS_COMPILE=x86_64-linux-gnu-
+else ifeq ($(ARCH),i386)
+    CROSS_COMPILE=
+    CFLAGS += -m32
+    LDFLAGS += -m elf_i386
 else ifeq ($(ARCH),arm64)
     CROSS_COMPILE=aarch64-linux-gnu-
 else ifeq ($(ARCH),aarch64)
@@ -34,6 +38,8 @@ CFLAGS=-nostdlib -nostartfiles -ffreestanding -O2 -Wall -Wextra $(INCLUDES)
 # Architecture-specific flags and defines
 ifeq ($(ARCH),x86_64)
     CFLAGS += -m64 -D__x86_64__
+else ifeq ($(ARCH),i386)
+    CFLAGS += -m32 -D__i386__ -fno-pic -fno-pie
 else ifeq ($(ARCH),arm64)
     CFLAGS += -D__aarch64__
 else ifeq ($(ARCH),aarch64)
@@ -45,6 +51,8 @@ endif
 # Architecture-specific linker script
 ifeq ($(ARCH),x86_64)
     LDFLAGS=-T linker_x86_64.ld
+else ifeq ($(ARCH),i386)
+    LDFLAGS=-T linker_x86.ld -m elf_i386
 else
     LDFLAGS=-T linker.ld
 endif
@@ -103,6 +111,10 @@ ifeq ($(ARCH),x86_64)
 	cat multiboot_header.bin $(BUILD_DIR)/kernel_no_multiboot.bin > $(BUILD_DIR)/kernel_binary.img
 	python3 create_elf_wrapper.py $(BUILD_DIR)/kernel_binary.img $@
 	@echo "Build completed for $(ARCH) architecture with ELF multiboot wrapper"
+else ifeq ($(ARCH),i386)
+	# For i386, the kernel already has multiboot header in boot.S, just copy the ELF
+	cp $< $@
+	@echo "Build completed for $(ARCH) architecture with multiboot ELF"
 else
 	$(OBJCOPY) -O binary $< $@
 	@echo "Build completed for $(ARCH) architecture"

@@ -6,8 +6,8 @@
  * This file is part of the SAGE OS Project.
  * ───────────────────────────────────────────────────────────────────────────── */
 
-#if defined(__x86_64__)
-// Multiboot header for x86_64 - must be at the very beginning
+#if defined(__x86_64__) || defined(__i386__)
+// Multiboot header for x86 - must be at the very beginning
 .section ".multiboot"
 .align 4
 
@@ -29,7 +29,11 @@ _start:
     cli
     
     // Set up stack
+#ifdef __x86_64__
     mov $stack_top, %rsp
+#else
+    mov $stack_top, %esp
+#endif
     
     // Clear direction flag
     cld

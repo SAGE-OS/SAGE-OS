@@ -78,6 +78,20 @@
 #include "vga.h"
 #endif
 #include <stdarg.h>
+#include <stdint.h>
+
+#if defined(__x86_64__) || defined(__i386__)
+// x86 I/O port functions
+static inline void outb(uint16_t port, uint8_t value) {
+    __asm__ volatile ("outb %0, %1" : : "a"(value), "Nd"(port));
+}
+
+static inline uint8_t inb(uint16_t port) {
+    uint8_t ret;
+    __asm__ volatile ("inb %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
+}
+#endif
 
 // Memory-Mapped I/O addresses for Raspberry Pi
 #define MMIO_BASE       0x3F000000  // For Raspberry Pi 3/4
@@ -173,11 +187,21 @@ void uart_putc(unsigned char c) {
 
 // Receive a character
 unsigned char uart_getc() {
+#if defined(__x86_64__) || defined(__i386__)
+    // x86 serial port input (COM1 - 0x3F8)
+    // Wait until data is available
+    while (!(inb(0x3F8 + 5) & 1)) { }
+    
+    // Read the character from the data register
+    return inb(0x3F8);
+#else
+    // ARM UART input
     // Wait until receive FIFO is not empty
     while (*UART0_FR & (1 << 4)) { }
     
     // Read the character from the data register
     return *UART0_DR;
+#endif
 }
 
 // Send a string
