@@ -108,7 +108,7 @@ ifeq ($(ARCH),x86_64)
 	# For x86_64, create multiboot header and concatenate with kernel binary, then wrap in ELF
 	python3 create_multiboot_header.py
 	$(OBJCOPY) -O binary $< $(BUILD_DIR)/kernel_no_multiboot.bin
-	cat multiboot_header.bin $(BUILD_DIR)/kernel_no_multiboot.bin > $(BUILD_DIR)/kernel_binary.img
+	cat $(BUILD_DIR)/multiboot_header.bin $(BUILD_DIR)/kernel_no_multiboot.bin > $(BUILD_DIR)/kernel_binary.img
 	python3 create_elf_wrapper.py $(BUILD_DIR)/kernel_binary.img $@
 	@echo "Build completed for $(ARCH) architecture with ELF multiboot wrapper"
 else ifeq ($(ARCH),i386)

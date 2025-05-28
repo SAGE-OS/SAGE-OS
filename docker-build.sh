@@ -14,7 +14,8 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_NAME="SAGE-OS"
-VERSION="0.1.0"
+VERSION="1.0.0"
+DATE_VERSION=$(date +%Y%m%d)
 
 # Colors
 RED='\033[0;31m'
@@ -92,9 +93,14 @@ RUN chmod +x build.sh
 CMD ["make", "-f", "Makefile.multi-arch", "kernel"]
 EOF
     
-    # Build the container
+    # Build the container with proper tagging
     log_info "Building Docker container for $arch..."
-    docker build -f "Dockerfile.$arch" -t "$container_name" .
+    docker build -f "Dockerfile.$arch" \
+        -t "$container_name" \
+        -t "$container_name:v$VERSION-$DATE_VERSION" \
+        -t "sage-os-builder:$arch-latest" \
+        -t "sage-os-builder:$arch-v$VERSION-$DATE_VERSION" \
+        .
     
     log_success "Container $container_name created successfully"
 }
@@ -186,13 +192,17 @@ LABEL org.opencontainers.image.licenses="BSD-3-Clause"
 CMD ["/boot/kernel.img"]
 EOF
     
-    # Build multi-arch image
+    # Build multi-arch image with proper tagging
     log_info "Building multi-architecture Docker image..."
     docker buildx build \
         --platform linux/amd64,linux/arm64,linux/arm/v7 \
         -f Dockerfile.multiarch \
         -t "sage-os:latest" \
         -t "sage-os:$VERSION" \
+        -t "sage-os:v$VERSION-$DATE_VERSION" \
+        -t "sage-os:amd64-v$VERSION-$DATE_VERSION" \
+        -t "sage-os:arm64-v$VERSION-$DATE_VERSION" \
+        -t "sage-os:armv7-v$VERSION-$DATE_VERSION" \
         --push \
         . || log_warning "Multi-arch build failed (registry push may not be configured)"
     

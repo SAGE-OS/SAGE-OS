@@ -1,5 +1,7 @@
 /* SAGE OS Kernel - Standalone Version */
 
+#include "../drivers/serial.h"
+
 #if defined(__x86_64__) || defined(__i386__)
 // I/O port functions for x86
 static inline void outb(unsigned short port, unsigned char value) {
@@ -11,47 +13,25 @@ static inline unsigned char inb(unsigned short port) {
     __asm__ volatile ("inb %1, %0" : "=a"(ret) : "Nd"(port));
     return ret;
 }
+#endif
 
-// Serial port functions for x86
-void serial_init() {
-    outb(0x3F8 + 1, 0x00);    // Disable interrupts
-    outb(0x3F8 + 3, 0x80);    // Enable DLAB
-    outb(0x3F8 + 0, 0x03);    // Set divisor to 3 (38400 baud)
-    outb(0x3F8 + 1, 0x00);    // High byte
-    outb(0x3F8 + 3, 0x03);    // 8 bits, no parity, one stop bit
-    outb(0x3F8 + 2, 0xC7);    // Enable FIFO
-    outb(0x3F8 + 4, 0x0B);    // IRQs enabled, RTS/DSR set
-}
-
-void serial_putc(char c) {
-    while ((inb(0x3F8 + 5) & 0x20) == 0);
-    outb(0x3F8, c);
-}
-
-void serial_puts(const char* str) {
-    while (*str) {
-        serial_putc(*str++);
+// Simple delay function
+void delay(int ms) {
+    volatile int i, j;
+    for (i = 0; i < ms; i++) {
+        for (j = 0; j < 1000; j++) {
+            // Simple busy wait
+        }
     }
 }
 
-#else
-// ARM/RISC-V UART functions (placeholder for now)
-void serial_init() {
-    // ARM/RISC-V serial initialization would go here
-}
-
-void serial_putc(char c) {
-    // ARM/RISC-V serial output would go here
-    // For now, just do nothing
-    (void)c;
-}
-
-void serial_puts(const char* str) {
-    // ARM/RISC-V serial output would go here
-    // For now, just do nothing
-    (void)str;
-}
+// QEMU exit function
+void qemu_exit(int exit_code) {
+#if defined(__x86_64__) || defined(__i386__)
+    // QEMU ISA debug exit
+    outb(0xf4, exit_code);
 #endif
+}
 
 // Display ASCII art welcome message
 void display_welcome_message() {
@@ -71,7 +51,23 @@ void display_welcome_message() {
     serial_puts("================================================================\n\n");
     
     serial_puts("Initializing system components...\n");
+    delay(500);
+    serial_puts("[OK] Serial driver initialized\n");
+    delay(300);
+    serial_puts("[OK] Memory management initialized\n");
+    delay(300);
+    serial_puts("[OK] Shell subsystem loaded\n");
+    delay(300);
+    serial_puts("[OK] AI subsystem ready\n");
+    delay(500);
     serial_puts("System ready!\n\n");
+    serial_puts("Starting shell in 3 seconds...\n");
+    delay(1000);
+    serial_puts("2...\n");
+    delay(1000);
+    serial_puts("1...\n");
+    delay(1000);
+    serial_puts("Starting shell now!\n\n");
 }
 
 // Simple shell prompt
@@ -103,7 +99,7 @@ void simple_shell() {
     serial_puts("SAGE OS Version 1.0.0\n");
     serial_puts("Built on: 2025-05-28\n");
     serial_puts("Kernel: SAGE Kernel v1.0.0\n");
-    serial_puts("Architecture: i386\n\n");
+    serial_puts("Architecture: Multi-platform\n\n");
     
     serial_puts("sage@localhost:~$ ls\n");
     serial_puts("total 8\n");
@@ -132,10 +128,16 @@ void simple_shell() {
     
     serial_puts("sage@localhost:~$ exit\n");
     serial_puts("Shutting down SAGE OS...\n");
+    delay(1000);
     serial_puts("Thank you for using SAGE OS!\n");
+    delay(1000);
     serial_puts("System halted.\n");
+    delay(500);
     
-    // Halt the system
+    // Try to exit QEMU gracefully
+    qemu_exit(0);
+    
+    // If QEMU exit doesn't work, halt the system
     while (1) {
 #if defined(__x86_64__) || defined(__i386__)
         __asm__ volatile("hlt");

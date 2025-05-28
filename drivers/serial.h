@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 
-#if defined(ARCH_X86_64) || defined(ARCH_I386)
+#if defined(__x86_64__) || defined(__i386__)
 void serial_init(void);
 void serial_putc(char c);
 void serial_puts(const char* str);

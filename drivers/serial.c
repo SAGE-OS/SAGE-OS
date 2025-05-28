@@ -8,7 +8,7 @@
 
 #include "serial.h"
 
-#if defined(ARCH_X86_64) || defined(ARCH_I386)
+#if defined(__x86_64__) || defined(__i386__)
 
 // COM1 port base address
 #define COM1_PORT 0x3F8
@@ -72,4 +72,4 @@ void serial_puts(const char* str) {
     }
 }
 
-#endif // ARCH_X86_64 || ARCH_I386
+#endif // __x86_64__ || __i386__
