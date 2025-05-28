@@ -33,19 +33,19 @@ brew install --cask utm
 
 | SAGE OS Image | UTM Architecture | Performance | Recommended |
 |---------------|------------------|-------------|-------------|
-| `SAGE-OS-0.1.0-x86_64-generic.img` | x86_64 | ⭐⭐⭐⭐⭐ Native | ✅ **Best Choice** |
-| `SAGE-OS-0.1.0-i386-generic.img` | i386 | ⭐⭐⭐⭐ Native | ✅ Good |
-| `SAGE-OS-0.1.0-aarch64-generic.img` | ARM64 | ⭐⭐ Emulated | ⚠️ Slow |
-| `SAGE-OS-0.1.0-arm-generic.img` | ARM32 | ⭐⭐ Emulated | ⚠️ Slow |
+| `sage-os-x86_64-v1.0.0-*.iso` | x86_64 | ⭐⭐⭐⭐⭐ Native | ✅ **Best Choice** |
+| `sage-os-i386-v1.0.0-*.iso` | i386 | ⭐⭐⭐⭐ Native | ✅ Good |
+| `sage-os-aarch64-v1.0.0-*.img` | ARM64 | ⭐⭐ Emulated | ⚠️ Slow |
+| `sage-os-riscv64-v1.0.0-*.img` | RISC-V | ⭐⭐ Emulated | ⚠️ Slow |
 
-### For Apple Silicon Macs (M1/M2/M3)
+### For Apple Silicon Macs (M1/M2/M3/M4)
 
 | SAGE OS Image | UTM Architecture | Performance | Recommended |
 |---------------|------------------|-------------|-------------|
-| `SAGE-OS-0.1.0-aarch64-generic.img` | ARM64 | ⭐⭐⭐⭐⭐ Native | ✅ **Best Choice** |
-| `SAGE-OS-0.1.0-arm-generic.img` | ARM32 | ⭐⭐⭐⭐ Native | ✅ Good |
-| `SAGE-OS-0.1.0-x86_64-generic.img` | x86_64 | ⭐⭐ Emulated | ⚠️ Slow |
-| `SAGE-OS-0.1.0-i386-generic.img` | i386 | ⭐⭐ Emulated | ⚠️ Slow |
+| `sage-os-aarch64-v1.0.0-*.img` | ARM64 | ⭐⭐⭐⭐⭐ Native | ✅ **Best Choice** |
+| `sage-os-riscv64-v1.0.0-*.img` | RISC-V | ⭐⭐⭐⭐ Native | ✅ Good |
+| `sage-os-x86_64-v1.0.0-*.iso` | x86_64 | ⭐⭐ Emulated | ⚠️ Slow |
+| `sage-os-i386-v1.0.0-*.iso` | i386 | ⭐⭐ Emulated | ⚠️ Slow |
 
 ---
 
@@ -73,10 +73,10 @@ Storage:
 #### Boot Configuration
 ```
 Boot Device: CD/DVD
-Boot Image: SAGE-OS-0.1.0-x86_64-generic.iso (if available)
+Boot Image: sage-os-x86_64-v1.0.0-20250528.iso
 OR
 Boot Device: Hard Disk
-Boot Image: SAGE-OS-0.1.0-x86_64-generic.img
+Boot Image: sage-os-x86_64-v1.0.0-20250528.img
 ```
 
 #### Advanced Settings
@@ -107,7 +107,7 @@ Storage:
 #### Boot Configuration
 ```
 Boot Device: Hard Disk
-Boot Image: SAGE-OS-0.1.0-aarch64-generic.img
+Boot Image: sage-os-aarch64-v1.0.0-20250528.img
 UEFI Boot: ✅ Enabled
 ```
 
@@ -263,6 +263,265 @@ CPU: x86_64/aarch64 detected
 AI System Agent: Initializing...
 Shell ready.
 SAGE> 
+```
+
+---
+
+## Deep UTM Configuration Settings
+
+### Advanced QEMU Arguments for SAGE OS
+
+#### Intel Mac Deep Settings (x86_64)
+```bash
+# UTM → Settings → QEMU → Additional Arguments
+-cpu Penryn,+ssse3,+sse4.1,+sse4.2,+x2apic
+-machine pc-q35-7.2,accel=hvf:tcg
+-smp 4,cores=4,threads=1,sockets=1
+-m 4096
+-device virtio-vga-gl,virgl=on
+-device intel-hda -device hda-duplex
+-netdev user,id=net0,hostfwd=tcp::2222-:22
+-device virtio-net-pci,netdev=net0
+-device virtio-balloon-pci
+-device virtio-rng-pci
+-rtc base=localtime,clock=host
+-boot order=cd
+```
+
+#### Apple Silicon Deep Settings (ARM64)
+```bash
+# UTM → Settings → QEMU → Additional Arguments
+-cpu host
+-machine virt-7.2,accel=hvf,highmem=on
+-smp 6,cores=6,threads=1,sockets=1
+-m 6144
+-device virtio-gpu-pci,virgl=on
+-device virtio-sound-pci
+-netdev vmnet-shared,id=net0
+-device virtio-net-pci,netdev=net0
+-device virtio-balloon-pci
+-device virtio-rng-pci
+-device qemu-xhci
+-device usb-kbd -device usb-tablet
+-rtc base=utc,clock=host
+```
+
+### UTM Serial Console Configuration
+
+#### Enable Serial Console for SAGE OS Debugging
+```bash
+# Add to QEMU Arguments for serial output
+-serial stdio
+-serial file:/tmp/sage-os-serial.log
+
+# For dual serial ports (debugging + console)
+-serial mon:stdio
+-serial file:/tmp/sage-os-debug.log
+```
+
+#### Serial Port Settings in UTM
+```
+UTM → Settings → Serial
+Port 1: Enabled
+  - Mode: Built-in Terminal
+  - Target: Console
+Port 2: Enabled  
+  - Mode: File Output
+  - Target: /tmp/sage-os.log
+```
+
+### Advanced Display Configuration
+
+#### High-DPI Display Settings
+```bash
+# For Retina/4K displays
+-device virtio-vga-gl,virgl=on,xres=2560,yres=1600
+-display cocoa,gl=on,show-cursor=on
+
+# For standard displays
+-device virtio-vga-gl,virgl=on,xres=1920,yres=1080
+-display cocoa,gl=on
+```
+
+#### Multiple Monitor Support
+```bash
+# Dual monitor setup
+-device virtio-vga-gl,virgl=on,max_outputs=2
+-device virtio-vga-gl,virgl=on,max_outputs=2,bus=pcie.0,addr=0x2
+```
+
+### Storage Performance Optimization
+
+#### NVMe Storage for Better Performance
+```bash
+# Replace default storage with NVMe
+-device nvme,drive=drive0,serial=sage-nvme-01
+-drive file=sage-os-storage.qcow2,if=none,id=drive0,cache=writethrough,aio=native
+```
+
+#### Storage Cache Settings
+```
+UTM → Settings → Drives → Advanced
+Cache Mode: writethrough (safest)
+AIO Mode: native (best performance)
+Discard Mode: unmap (SSD optimization)
+```
+
+### Network Advanced Configuration
+
+#### Bridged Networking Setup
+```bash
+# Create bridge interface on macOS first
+sudo ifconfig bridge0 create
+sudo ifconfig bridge0 addm en0
+sudo ifconfig bridge0 up
+
+# UTM QEMU Arguments
+-netdev bridge,id=net0,br=bridge0
+-device virtio-net-pci,netdev=net0,mac=52:54:00:12:34:56
+```
+
+#### Port Forwarding for SAGE OS Services
+```bash
+# SSH access (when SAGE OS supports it)
+-netdev user,id=net0,hostfwd=tcp::2222-:22
+
+# HTTP server (for SAGE OS web interface)
+-netdev user,id=net0,hostfwd=tcp::8080-:80
+
+# Custom SAGE OS services
+-netdev user,id=net0,hostfwd=tcp::9000-:9000
+```
+
+### Memory and CPU Tuning
+
+#### Memory Balloon and Huge Pages
+```bash
+# Enable memory ballooning
+-device virtio-balloon-pci,deflate-on-oom=on
+
+# Huge pages (requires host configuration)
+-mem-prealloc -mem-path /dev/hugepages
+```
+
+#### CPU Affinity and NUMA
+```bash
+# Pin VM to specific CPU cores (Apple Silicon)
+-smp 4,cores=4,threads=1,sockets=1
+-cpu host,+pmu
+-numa node,memdev=mem0,cpus=0-3,nodeid=0
+-object memory-backend-ram,id=mem0,size=4G
+```
+
+### Audio Configuration for SAGE OS
+
+#### Audio Device Setup
+```bash
+# Intel Mac audio
+-device intel-hda -device hda-duplex
+-audiodev coreaudio,id=audio0
+
+# Apple Silicon audio
+-device virtio-sound-pci
+-audiodev coreaudio,id=audio0,out.buffer-length=46440
+```
+
+### USB Device Passthrough
+
+#### USB Controller Configuration
+```bash
+# USB 3.0 controller
+-device qemu-xhci,id=xhci
+
+# USB 2.0 controller (compatibility)
+-device usb-ehci,id=ehci
+-device usb-uhci,id=uhci1,masterbus=ehci.0,firstport=0
+-device usb-uhci,id=uhci2,masterbus=ehci.0,firstport=2
+```
+
+#### USB Device Passthrough
+```bash
+# Pass through specific USB device
+-device usb-host,vendorid=0x1234,productid=0x5678
+
+# Pass through USB storage
+-device usb-storage,drive=usbdrive
+-drive file=/path/to/usb.img,if=none,id=usbdrive
+```
+
+### Security and Isolation Settings
+
+#### Secure Boot Configuration
+```bash
+# Enable secure boot (ARM64)
+-machine virt-7.2,secure=on
+-drive file=AAVMF_VARS.fd,if=pflash,format=raw,unit=1
+
+# TPM 2.0 support
+-tpmdev emulator,id=tpm0,chardev=chrtpm
+-chardev socket,id=chrtpm,path=/tmp/swtpm-sock
+-device tpm-tis,tpmdev=tpm0
+```
+
+#### Sandbox and Isolation
+```bash
+# Enable sandbox mode
+-sandbox on,obsolete=deny,elevateprivileges=deny,spawn=deny,resourcecontrol=deny
+
+# Disable unnecessary features
+-no-user-config -nodefaults
+```
+
+### Debugging and Development Settings
+
+#### GDB Debugging Support
+```bash
+# Enable GDB server
+-s -S
+# Connect with: gdb -ex "target remote localhost:1234"
+
+# Custom GDB port
+-gdb tcp::9999
+```
+
+#### QEMU Monitor Access
+```bash
+# Human monitor interface
+-monitor stdio
+
+# QMP (QEMU Machine Protocol)
+-qmp tcp:localhost:4444,server,nowait
+```
+
+#### Trace and Logging
+```bash
+# Enable extensive logging
+-d guest_errors,unimp,trace:*
+-D /tmp/sage-os-qemu.log
+
+# Specific subsystem tracing
+-trace events=/tmp/trace-events.txt
+```
+
+### Performance Monitoring
+
+#### Built-in Performance Counters
+```bash
+# Enable performance monitoring
+-cpu host,+pmu,pmu=on
+
+# Memory usage monitoring
+-object memory-backend-ram,id=mem0,size=4G,prealloc=on
+```
+
+#### External Monitoring Tools
+```bash
+# Activity Monitor integration
+# UTM → View → Show Performance Monitor
+
+# Command line monitoring
+top -pid $(pgrep -f "sage-os")
+vm_stat 1
 ```
 
 ---
