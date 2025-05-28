@@ -69,7 +69,29 @@
 //
 
 #include "uart.h"
+
+#ifdef ARCH_X86_64
+#include "serial.h"
+#include "vga.h"
+#elif defined(ARCH_I386)
+#include "serial.h"
+#include "vga.h"
+#endif
 #include <stdarg.h>
+#include <stdint.h>
+
+#if defined(__x86_64__) || defined(__i386__)
+// x86 I/O port functions
+static inline void outb(uint16_t port, uint8_t value) {
+    __asm__ volatile ("outb %0, %1" : : "a"(value), "Nd"(port));
+}
+
+static inline uint8_t inb(uint16_t port) {
+    uint8_t ret;
+    __asm__ volatile ("inb %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
+}
+#endif
 
 // Memory-Mapped I/O addresses for Raspberry Pi
 #define MMIO_BASE       0x3F000000  // For Raspberry Pi 3/4
@@ -92,6 +114,12 @@
 
 // Initialize UART
 void uart_init() {
+#if defined(ARCH_X86_64) || defined(ARCH_I386)
+    // Initialize VGA and serial for x86 platforms
+    vga_init();
+    serial_init();
+#else
+    // ARM/RISC-V initialization
     // Disable UART0
     *UART0_CR = 0;
 
@@ -133,10 +161,17 @@ void uart_init() {
 
     // Enable UART0, receive and transmit
     *UART0_CR = (1 << 0) | (1 << 8) | (1 << 9);
+#endif
 }
 
 // Send a character
 void uart_putc(unsigned char c) {
+#if defined(ARCH_X86_64) || defined(ARCH_I386)
+    // Output to both VGA and serial for x86 platforms
+    vga_putc(c);
+    serial_putc(c);
+#else
+    // ARM/RISC-V output
     // Wait until transmit FIFO is not full
     while (*UART0_FR & (1 << 5)) { }
     
@@ -147,15 +182,26 @@ void uart_putc(unsigned char c) {
     if (c == '\n') {
         uart_putc('\r');
     }
+#endif
 }
 
 // Receive a character
 unsigned char uart_getc() {
+#if defined(__x86_64__) || defined(__i386__)
+    // x86 serial port input (COM1 - 0x3F8)
+    // Wait until data is available
+    while (!(inb(0x3F8 + 5) & 1)) { }
+    
+    // Read the character from the data register
+    return inb(0x3F8);
+#else
+    // ARM UART input
     // Wait until receive FIFO is not empty
     while (*UART0_FR & (1 << 4)) { }
     
     // Read the character from the data register
     return *UART0_DR;
+#endif
 }
 
 // Send a string

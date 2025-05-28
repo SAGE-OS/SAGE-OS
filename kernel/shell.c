@@ -41,16 +41,42 @@ static void cmd_meminfo(int argc, char* argv[]);
 static void cmd_reboot(int argc, char* argv[]);
 static void cmd_version(int argc, char* argv[]);
 static void cmd_ai(int argc, char* argv[]);
+static void cmd_exit(int argc, char* argv[]);
+static void cmd_shutdown(int argc, char* argv[]);
+static void cmd_ls(int argc, char* argv[]);
+static void cmd_pwd(int argc, char* argv[]);
+static void cmd_mkdir(int argc, char* argv[]);
+static void cmd_rmdir(int argc, char* argv[]);
+static void cmd_touch(int argc, char* argv[]);
+static void cmd_rm(int argc, char* argv[]);
+static void cmd_cat(int argc, char* argv[]);
+static void cmd_nano(int argc, char* argv[]);
+static void cmd_uptime(int argc, char* argv[]);
+static void cmd_whoami(int argc, char* argv[]);
+static void cmd_uname(int argc, char* argv[]);
 
 // Command table
 static const command_t commands[] = {
-    {"help",    "Display help information",           cmd_help},
-    {"echo",    "Echo arguments to the console",      cmd_echo},
-    {"clear",   "Clear the screen",                   cmd_clear},
-    {"meminfo", "Display memory information",         cmd_meminfo},
-    {"reboot",  "Reboot the system",                  cmd_reboot},
-    {"version", "Display OS version information",     cmd_version},
-    {"ai",      "AI subsystem commands",              cmd_ai},
+    {"help",     "Display help information",           cmd_help},
+    {"echo",     "Echo arguments to the console",      cmd_echo},
+    {"clear",    "Clear the screen",                   cmd_clear},
+    {"meminfo",  "Display memory information",         cmd_meminfo},
+    {"reboot",   "Reboot the system",                  cmd_reboot},
+    {"version",  "Display OS version information",     cmd_version},
+    {"ai",       "AI subsystem commands",              cmd_ai},
+    {"exit",     "Exit SAGE OS and shutdown QEMU",     cmd_exit},
+    {"shutdown", "Shutdown the system",                cmd_shutdown},
+    {"ls",       "List directory contents",            cmd_ls},
+    {"pwd",      "Print working directory",            cmd_pwd},
+    {"mkdir",    "Create directory",                   cmd_mkdir},
+    {"rmdir",    "Remove directory",                   cmd_rmdir},
+    {"touch",    "Create empty file",                  cmd_touch},
+    {"rm",       "Remove file",                        cmd_rm},
+    {"cat",      "Display file contents",              cmd_cat},
+    {"nano",     "Simple text editor",                 cmd_nano},
+    {"uptime",   "Show system uptime",                 cmd_uptime},
+    {"whoami",   "Display current user",               cmd_whoami},
+    {"uname",    "Display system information",         cmd_uname},
     {NULL, NULL, NULL}  // Terminator
 };
 
@@ -254,7 +280,8 @@ static void cmd_reboot(int argc, char* argv[]) {
 static void cmd_version(int argc, char* argv[]) {
     uart_puts("SAGE OS v0.1.0\n");
     uart_puts("Self-Aware General Environment Operating System\n");
-    uart_puts("Copyright (c) 2025 SAGE OS Team\n");
+    uart_puts("Copyright (c) 2025 Ashish Vasant Yesale\n");
+    uart_puts("Designed by Ashish Yesale (ashishyesale007@gmail.com)\n");
 }
 
 // AI command handler
@@ -393,5 +420,192 @@ static void cmd_ai(int argc, char* argv[]) {
     } else {
         uart_printf("Unknown AI command: %s\n", argv[1]);
         uart_puts("Type 'ai' for a list of AI commands\n");
+    }
+}
+
+// Exit command - shuts down QEMU
+static void cmd_exit(int argc, char* argv[]) {
+    uart_puts("Shutting down SAGE OS...\n");
+    uart_puts("Thank you for using SAGE OS!\n");
+    uart_puts("Designed by Ashish Yesale\n\n");
+    
+    // Send QEMU monitor command to quit
+    uart_puts("Sending QEMU quit command...\n");
+    
+    // For QEMU, we can trigger a shutdown by writing to specific ports
+    // or by causing a triple fault. Let's use a clean shutdown approach.
+    
+    // Method 1: ACPI shutdown (works on x86)
+    #if defined(__x86_64__) || defined(__i386__)
+        // ACPI shutdown - write 0x2000 to port 0x604 (QEMU specific)
+        asm volatile("outw %%ax, %%dx" : : "a"(0x2000), "d"(0x604));
+    #endif
+    
+    // Method 2: ARM/AArch64 - use PSCI (Power State Coordination Interface)
+    #if defined(__aarch64__)
+        // PSCI system_off call - use register variables for better control
+        register uint64_t x0 asm("x0") = 0x84000008ULL;
+        asm volatile("hvc #0" : : "r"(x0) : "memory");
+    #elif defined(__arm__)
+        // ARM32 PSCI system_off call
+        register uint32_t r0 asm("r0") = 0x84000008U;
+        asm volatile("smc #0" : : "r"(r0) : "memory");
+    #endif
+    
+    // Method 3: RISC-V - use SBI (Supervisor Binary Interface)
+    #if defined(__riscv)
+        // SBI system shutdown
+        register long a7 asm("a7") = 8;
+        register long a0 asm("a0") = 0;
+        asm volatile("ecall" : : "r"(a7), "r"(a0) : "memory");
+    #endif
+    
+    // If none of the above work, halt the CPU
+    uart_puts("System halted. You can close QEMU now.\n");
+    while (1) {
+        #if defined(__aarch64__) || defined(__arm__)
+            asm volatile("wfe");
+        #elif defined(__x86_64__) || defined(__i386__)
+            asm volatile("hlt");
+        #elif defined(__riscv)
+            asm volatile("wfi");
+        #else
+            for (volatile int i = 0; i < 1000000; i++);
+        #endif
+    }
+}
+
+// Shutdown command - alias for exit
+static void cmd_shutdown(int argc, char* argv[]) {
+    cmd_exit(argc, argv);
+}
+
+// List directory contents (simulated)
+static void cmd_ls(int argc, char* argv[]) {
+    uart_puts("Directory listing (simulated filesystem):\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 .\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 ..\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 bin\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 dev\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 etc\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 home\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 proc\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 sys\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 tmp\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 usr\n");
+    uart_puts("drwxr-xr-x  2 root root  4096 Jan  1 00:00 var\n");
+    uart_puts("-rw-r--r--  1 root root   256 Jan  1 00:00 README.txt\n");
+    uart_puts("-rw-r--r--  1 root root   128 Jan  1 00:00 welcome.txt\n");
+}
+
+// Print working directory
+static void cmd_pwd(int argc, char* argv[]) {
+    uart_puts("/root\n");
+}
+
+// Create directory (simulated)
+static void cmd_mkdir(int argc, char* argv[]) {
+    if (argc < 2) {
+        uart_puts("Usage: mkdir <directory_name>\n");
+        return;
+    }
+    uart_printf("Created directory: %s\n", argv[1]);
+}
+
+// Remove directory (simulated)
+static void cmd_rmdir(int argc, char* argv[]) {
+    if (argc < 2) {
+        uart_puts("Usage: rmdir <directory_name>\n");
+        return;
+    }
+    uart_printf("Removed directory: %s\n", argv[1]);
+}
+
+// Create empty file (simulated)
+static void cmd_touch(int argc, char* argv[]) {
+    if (argc < 2) {
+        uart_puts("Usage: touch <filename>\n");
+        return;
+    }
+    uart_printf("Created file: %s\n", argv[1]);
+}
+
+// Remove file (simulated)
+static void cmd_rm(int argc, char* argv[]) {
+    if (argc < 2) {
+        uart_puts("Usage: rm <filename>\n");
+        return;
+    }
+    uart_printf("Removed file: %s\n", argv[1]);
+}
+
+// Display file contents (simulated)
+static void cmd_cat(int argc, char* argv[]) {
+    if (argc < 2) {
+        uart_puts("Usage: cat <filename>\n");
+        return;
+    }
+    
+    if (strcmp(argv[1], "README.txt") == 0) {
+        uart_puts("Welcome to SAGE OS!\n");
+        uart_puts("This is a self-aware general environment operating system.\n");
+        uart_puts("Designed by Ashish Yesale for advanced AI integration.\n");
+        uart_puts("\nFeatures:\n");
+        uart_puts("- Multi-architecture support\n");
+        uart_puts("- AI subsystem integration\n");
+        uart_puts("- Self-evolving capabilities\n");
+        uart_puts("- Advanced security features\n");
+    } else if (strcmp(argv[1], "welcome.txt") == 0) {
+        uart_puts("Hello from SAGE OS!\n");
+        uart_puts("You are running on a revolutionary operating system.\n");
+        uart_puts("Type 'help' to see available commands.\n");
+    } else {
+        uart_printf("File not found: %s\n", argv[1]);
+    }
+}
+
+// Simple text editor (simulated)
+static void cmd_nano(int argc, char* argv[]) {
+    if (argc < 2) {
+        uart_puts("Usage: nano <filename>\n");
+        return;
+    }
+    
+    uart_printf("Opening %s in nano editor (simulated)...\n", argv[1]);
+    uart_puts("This is a simulated text editor.\n");
+    uart_puts("In a full implementation, this would provide text editing capabilities.\n");
+    uart_puts("Press Ctrl+X to exit (simulated).\n");
+}
+
+// Show system uptime
+static void cmd_uptime(int argc, char* argv[]) {
+    uart_puts("System uptime: 00:00:42 up 1 min, 1 user, load average: 0.00, 0.00, 0.00\n");
+}
+
+// Display current user
+static void cmd_whoami(int argc, char* argv[]) {
+    uart_puts("root\n");
+}
+
+// Display system information
+static void cmd_uname(int argc, char* argv[]) {
+    if (argc > 1 && strcmp(argv[1], "-a") == 0) {
+        uart_puts("SAGE-OS sage-os 0.1.0 #1 ");
+        #if defined(__aarch64__)
+            uart_puts("aarch64");
+        #elif defined(__x86_64__)
+            uart_puts("x86_64");
+        #elif defined(__arm__)
+            uart_puts("arm");
+        #elif defined(__riscv)
+            uart_puts("riscv64");
+        #elif defined(__i386__)
+            uart_puts("i386");
+        #else
+            uart_puts("unknown");
+        #endif
+        uart_puts(" GNU/Linux\n");
+    } else {
+        uart_puts("SAGE-OS\n");
     }
 }

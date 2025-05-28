@@ -1,9 +1,0 @@
-REM ─────────────────────────────────────────────────────────────────────────────
-REM SAGE OS — Copyright (c) 2025 Ashish Vasant Yesale (ashishyesale007@gmail.com)
-REM SPDX-License-Identifier: BSD-3-Clause OR Proprietary
-REM SAGE OS is dual-licensed under the BSD 3-Clause License and a Commercial License.
-REM 
-REM This file is part of the SAGE OS Project.
-REM ─────────────────────────────────────────────────────────────────────────────
-@echo off
-echo Hello Batch
