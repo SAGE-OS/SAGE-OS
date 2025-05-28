@@ -69,6 +69,14 @@
 //
 
 #include "uart.h"
+
+#ifdef ARCH_X86_64
+#include "serial.h"
+#include "vga.h"
+#elif defined(ARCH_I386)
+#include "serial.h"
+#include "vga.h"
+#endif
 #include <stdarg.h>
 
 // Memory-Mapped I/O addresses for Raspberry Pi
@@ -92,6 +100,12 @@
 
 // Initialize UART
 void uart_init() {
+#if defined(ARCH_X86_64) || defined(ARCH_I386)
+    // Initialize VGA and serial for x86 platforms
+    vga_init();
+    serial_init();
+#else
+    // ARM/RISC-V initialization
     // Disable UART0
     *UART0_CR = 0;
 
@@ -133,10 +147,17 @@ void uart_init() {
 
     // Enable UART0, receive and transmit
     *UART0_CR = (1 << 0) | (1 << 8) | (1 << 9);
+#endif
 }
 
 // Send a character
 void uart_putc(unsigned char c) {
+#if defined(ARCH_X86_64) || defined(ARCH_I386)
+    // Output to both VGA and serial for x86 platforms
+    vga_putc(c);
+    serial_putc(c);
+#else
+    // ARM/RISC-V output
     // Wait until transmit FIFO is not full
     while (*UART0_FR & (1 << 5)) { }
     
@@ -147,6 +168,7 @@ void uart_putc(unsigned char c) {
     if (c == '\n') {
         uart_putc('\r');
     }
+#endif
 }
 
 // Receive a character

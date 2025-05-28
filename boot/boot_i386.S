@@ -6,7 +6,7 @@
 # This file is part of the SAGE OS Project.
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Multiboot header
+# Multiboot header for i386
 .section ".multiboot"
 .align 4
 multiboot_header:
@@ -22,7 +22,7 @@ _start:
     cli
     
     # Set up stack
-    mov $stack_top, %rsp
+    mov $stack_top, %esp
     
     # Clear direction flag
     cld

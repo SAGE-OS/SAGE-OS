@@ -2,7 +2,7 @@ ENTRY(_start)
 
 SECTIONS
 {
-    /* Kernel starts at 1MB for x86_64 multiboot */
+    /* Kernel starts at 1MB for i386 multiboot */
     . = 0x100000;
     
     __start = .;

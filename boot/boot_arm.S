@@ -6,38 +6,46 @@
 # This file is part of the SAGE OS Project.
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Multiboot header
-.section ".multiboot"
-.align 4
-multiboot_header:
-    .long 0x1BADB002          # magic
-    .long 0x00000000          # flags
-    .long -(0x1BADB002 + 0x00000000)  # checksum
+# SAGE OS Boot Code for ARM 32-bit
 
 .section ".text"
 .global _start
 
 _start:
     # Disable interrupts
-    cli
+    cpsid if
     
-    # Set up stack
-    mov $stack_top, %rsp
+    # Set up stack pointer
+    ldr sp, =stack_top
     
-    # Clear direction flag
-    cld
-    
+    # Clear BSS section
+    ldr r0, =__bss_start
+    ldr r1, =__bss_end
+    mov r2, #0
+clear_bss:
+    cmp r0, r1
+    bge bss_cleared
+    str r2, [r0], #4
+    b clear_bss
+bss_cleared:
+
     # Call kernel main
-    call kernel_main
+    bl kernel_main
     
     # If kernel_main returns, halt
 halt_loop:
-    hlt
-    jmp halt_loop
+    wfi  // Wait for interrupt
+    b halt_loop
 
 # Stack space
 .section ".bss"
-.align 16
+.align 8
 stack_bottom:
-    .skip 16384  # 16KB stack
+    .skip 16384  // 16KB stack
 stack_top:
+
+# BSS markers (will be defined by linker script)
+.weak __bss_start
+.weak __bss_end
+__bss_start:
+__bss_end:

@@ -225,7 +225,7 @@ check_deps_silent() {
 # Validate architecture
 validate_arch() {
     local arch=$1
-    local valid_archs=("aarch64" "x86_64" "riscv64" "arm")
+    local valid_archs=("aarch64" "x86_64" "riscv64" "arm" "i386")
     
     for valid_arch in "${valid_archs[@]}"; do
         if [[ "$arch" == "$valid_arch" ]]; then
@@ -470,6 +470,7 @@ Architectures:
   x86_64                   Intel/AMD 64-bit
   riscv64                  RISC-V 64-bit
   arm                      ARM 32-bit
+  i386                     Intel/AMD 32-bit
 
 Platforms:
   rpi3                     Raspberry Pi 3

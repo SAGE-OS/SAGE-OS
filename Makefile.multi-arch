@@ -47,18 +47,35 @@ endif
 ifeq ($(ARCH),aarch64)
     CROSS_PREFIX = aarch64-linux-gnu-
     QEMU_ARCH = aarch64
-    QEMU_MACHINE = raspi3
+    ifeq ($(PLATFORM),rpi4)
+        QEMU_MACHINE = raspi3
+    else ifeq ($(PLATFORM),rpi5)
+        QEMU_MACHINE = raspi3
+    else
+        QEMU_MACHINE = virt
+    endif
     KERNEL_ARCH = arm64
 else ifeq ($(ARCH),arm)
     CROSS_PREFIX = arm-linux-gnueabihf-
     QEMU_ARCH = arm
-    QEMU_MACHINE = raspi2
+    ifeq ($(PLATFORM),rpi4)
+        QEMU_MACHINE = raspi2
+    else ifeq ($(PLATFORM),rpi5)
+        QEMU_MACHINE = raspi2
+    else
+        QEMU_MACHINE = vexpress-a9
+    endif
     KERNEL_ARCH = arm
 else ifeq ($(ARCH),x86_64)
     CROSS_PREFIX = x86_64-linux-gnu-
     QEMU_ARCH = x86_64
     QEMU_MACHINE = pc
     KERNEL_ARCH = x86_64
+else ifeq ($(ARCH),i386)
+    CROSS_PREFIX = 
+    QEMU_ARCH = i386
+    QEMU_MACHINE = pc
+    KERNEL_ARCH = i386
 else ifeq ($(ARCH),riscv64)
     CROSS_PREFIX = riscv64-linux-gnu-
     QEMU_ARCH = riscv64
@@ -86,8 +103,20 @@ WARNINGS = -Wall -Wextra -Werror -Wno-unused-parameter
 OPTIMIZATION = -O2
 DEBUG_FLAGS = $(if $(filter ON,$(ENABLE_DEBUG)),-g -DDEBUG,-DNDEBUG)
 
-CFLAGS = -nostdlib -nostartfiles -ffreestanding $(OPTIMIZATION) $(WARNINGS) $(DEBUG_FLAGS) $(INCLUDES)
-LDFLAGS = -T linker.ld -nostdlib
+CFLAGS = -nostdlib -nostartfiles -ffreestanding $(OPTIMIZATION) $(WARNINGS) $(DEBUG_FLAGS) $(INCLUDES) -DARCH_$(shell echo $(ARCH) | tr '[:lower:]' '[:upper:]')
+# Select appropriate linker script based on architecture
+ifeq ($(ARCH),x86_64)
+    LINKER_SCRIPT = linker_x86_64.ld
+else ifeq ($(ARCH),i386)
+    LINKER_SCRIPT = linker_i386.ld
+else
+    LINKER_SCRIPT = linker.ld
+endif
+
+LDFLAGS = -T $(LINKER_SCRIPT) -nostdlib
+ifeq ($(ARCH),i386)
+    LDFLAGS += -m elf_i386
+endif
 ASFLAGS = $(CFLAGS)
 
 # Architecture-specific flags
@@ -97,8 +126,10 @@ else ifeq ($(ARCH),arm)
     CFLAGS += -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 else ifeq ($(ARCH),x86_64)
     CFLAGS += -m64 -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -fno-pic
+else ifeq ($(ARCH),i386)
+    CFLAGS += -m32 -fno-pic -fno-stack-protector
 else ifeq ($(ARCH),riscv64)
-    CFLAGS += -march=rv64imac -mabi=lp64
+    CFLAGS += -march=rv64imac_zicsr -mabi=lp64
 endif
 
 # Platform-specific configuration
@@ -122,7 +153,20 @@ ifeq ($(ENABLE_CRYPTO),ON)
 endif
 
 # Source files
-BOOT_SOURCES = $(wildcard boot/*.S)
+# Select appropriate boot file based on architecture and platform
+ifeq ($(ARCH),x86_64)
+    BOOT_SOURCES = boot/boot_with_multiboot.S
+else ifeq ($(ARCH),i386)
+    BOOT_SOURCES = boot/boot_i386.S
+else ifeq ($(ARCH),aarch64)
+    BOOT_SOURCES = boot/boot_aarch64.S
+else ifeq ($(ARCH),arm)
+    BOOT_SOURCES = boot/boot_arm.S
+else ifeq ($(ARCH),riscv64)
+    BOOT_SOURCES = boot/boot_riscv64.S
+else
+    BOOT_SOURCES = boot/boot_with_multiboot.S
+endif
 KERNEL_SOURCES_ALL = $(wildcard kernel/*.c) $(wildcard kernel/*/*.c)
 KERNEL_SOURCES = $(if $(filter ON,$(ENABLE_AI)),$(filter-out $(wildcard kernel/ai/*.c),$(KERNEL_SOURCES_ALL)),$(KERNEL_SOURCES_ALL))
 DRIVER_SOURCES = $(wildcard drivers/*.c) $(wildcard drivers/*/*.c)
@@ -142,7 +186,7 @@ KERNEL_DUMP = $(ARCH_BUILD_DIR)/kernel.dump
 DIST_KERNEL = $(ARCH_DIST_DIR)/$(PROJECT_NAME)-$(VERSION)-$(ARCH)-$(PLATFORM).img
 DIST_ISO = $(ARCH_DIST_DIR)/$(PROJECT_NAME)-$(VERSION)-$(ARCH)-$(PLATFORM).iso
 DIST_SDCARD = $(ARCH_DIST_DIR)/$(PROJECT_NAME)-$(VERSION)-$(ARCH)-$(PLATFORM)-sdcard.img
-DIST_DOCKER = $(PROJECT_NAME):$(VERSION)-$(ARCH)
+DIST_DOCKER = $(shell echo $(PROJECT_NAME) | tr '[:upper:]' '[:lower:]'):$(VERSION)-$(ARCH)
 
 # Default target
 .PHONY: all
@@ -337,7 +381,14 @@ docker: $(KERNEL_IMG)
 	@echo "Creating Docker image for $(ARCH)..."
 	@echo "FROM scratch" > $(ARCH_BUILD_DIR)/Dockerfile
 	@echo "COPY kernel.img /boot/kernel.img" >> $(ARCH_BUILD_DIR)/Dockerfile
-	@echo "COPY config*.txt /boot/" >> $(ARCH_BUILD_DIR)/Dockerfile
+	@if [ -f config.txt ]; then \
+		cp config.txt $(ARCH_BUILD_DIR)/; \
+		echo "COPY config.txt /boot/" >> $(ARCH_BUILD_DIR)/Dockerfile; \
+	fi
+	@if [ -f config_rpi5.txt ]; then \
+		cp config_rpi5.txt $(ARCH_BUILD_DIR)/; \
+		echo "COPY config_rpi5.txt /boot/" >> $(ARCH_BUILD_DIR)/Dockerfile; \
+	fi
 	@echo "LABEL org.opencontainers.image.title=\"SAGE OS\"" >> $(ARCH_BUILD_DIR)/Dockerfile
 	@echo "LABEL org.opencontainers.image.version=\"$(VERSION)\"" >> $(ARCH_BUILD_DIR)/Dockerfile
 	@echo "LABEL org.opencontainers.image.architecture=\"$(ARCH)\"" >> $(ARCH_BUILD_DIR)/Dockerfile
