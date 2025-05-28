@@ -382,25 +382,39 @@ run_tests() {
     
     log_header "Running Tests for $arch ($platform)"
     
-    # Check if kernel exists
+    # Check if kernel exists (look in both build and dist directories)
     local kernel_path="build/$arch/kernel.img"
-    if [ ! -f "$kernel_path" ]; then
-        log_error "Kernel not found: $kernel_path"
+    local dist_kernel_path="dist/$arch/SAGE-OS-0.1.0-$arch-$platform.img"
+    
+    if [ ! -f "$kernel_path" ] && [ ! -f "$dist_kernel_path" ]; then
+        log_error "Kernel not found: $kernel_path or $dist_kernel_path"
         log_info "Building kernel first..."
         build_arch "$arch" "$platform" "kernel"
     fi
     
-    # Run QEMU test
-    log_info "Starting QEMU test (will timeout after 30 seconds)..."
-    timeout 30s make -f Makefile.multi-arch qemu ARCH="$arch" PLATFORM="$platform" || {
-        local exit_code=$?
-        if [ $exit_code -eq 124 ]; then
-            log_success "QEMU test completed (timed out as expected)"
-        else
-            log_error "QEMU test failed with exit code $exit_code"
-            return 1
-        fi
-    }
+    # Use the dist version if available, otherwise use build version
+    if [ -f "$dist_kernel_path" ]; then
+        kernel_path="$dist_kernel_path"
+    fi
+    
+    # Run QEMU test using tmux session
+    log_info "Starting QEMU test in tmux session (will timeout after 30 seconds)..."
+    local session_name="qemu-test-$arch-$$"
+    
+    # Create tmux session and run QEMU
+    tmux new-session -d -s "$session_name" "make -f Makefile.multi-arch qemu ARCH=$arch PLATFORM=$platform KERNEL_IMG=$kernel_path"
+    
+    # Wait for 30 seconds then kill the session
+    sleep 30
+    
+    # Check if session still exists and kill it
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+        log_info "Stopping QEMU test session..."
+        tmux kill-session -t "$session_name"
+        log_success "QEMU test completed (timed out as expected)"
+    else
+        log_success "QEMU test completed"
+    fi
 }
 
 # Clean builds

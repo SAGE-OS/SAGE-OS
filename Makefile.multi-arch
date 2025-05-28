@@ -96,6 +96,7 @@ AR = $(TOOLCHAIN_PATH)/$(CROSS_PREFIX)ar
 # Build directories
 ARCH_BUILD_DIR = $(BUILD_ROOT)/$(ARCH)
 ARCH_DIST_DIR = $(DIST_DIR)/$(ARCH)
+BUILD_OUTPUT_DIR = build-output
 
 # Compiler flags
 INCLUDES = -I. -Ikernel -Idrivers -Ikernel/ai
@@ -181,6 +182,10 @@ KERNEL_ELF = $(ARCH_BUILD_DIR)/kernel.elf
 KERNEL_IMG = $(ARCH_BUILD_DIR)/kernel.img
 KERNEL_MAP = $(ARCH_BUILD_DIR)/kernel.map
 KERNEL_DUMP = $(ARCH_BUILD_DIR)/kernel.dump
+
+# Versioned output files in build-output directory
+OUTPUT_KERNEL_ELF = $(BUILD_OUTPUT_DIR)/$(PROJECT_NAME)-$(VERSION)-$(ARCH)-$(PLATFORM).elf
+OUTPUT_KERNEL_IMG = $(BUILD_OUTPUT_DIR)/$(PROJECT_NAME)-$(VERSION)-$(ARCH)-$(PLATFORM).img
 
 # Distribution files
 DIST_KERNEL = $(ARCH_DIST_DIR)/$(PROJECT_NAME)-$(VERSION)-$(ARCH)-$(PLATFORM).img
@@ -281,6 +286,9 @@ $(ARCH_BUILD_DIR):
 $(ARCH_DIST_DIR):
 	@mkdir -p $(ARCH_DIST_DIR)
 
+$(BUILD_OUTPUT_DIR):
+	@mkdir -p $(BUILD_OUTPUT_DIR)
+
 # Compile C sources
 $(ARCH_BUILD_DIR)/%.o: %.c | $(ARCH_BUILD_DIR)
 	@mkdir -p $(dir $@)
@@ -306,9 +314,20 @@ $(KERNEL_IMG): $(KERNEL_ELF)
 	@echo "Kernel built successfully: $@"
 	@echo "Size: $$(du -h $@ | cut -f1)"
 
+# Versioned output files
+$(OUTPUT_KERNEL_ELF): $(KERNEL_ELF) | $(BUILD_OUTPUT_DIR)
+	@echo "Creating versioned kernel ELF: $(OUTPUT_KERNEL_ELF)"
+	@cp $(KERNEL_ELF) $(OUTPUT_KERNEL_ELF)
+
+$(OUTPUT_KERNEL_IMG): $(KERNEL_IMG) | $(BUILD_OUTPUT_DIR)
+	@echo "Creating versioned kernel image: $(OUTPUT_KERNEL_IMG)"
+	@cp $(KERNEL_IMG) $(OUTPUT_KERNEL_IMG)
+
 # Build kernel
 .PHONY: kernel
-kernel: check-deps $(KERNEL_IMG)
+kernel: check-deps $(KERNEL_IMG) $(OUTPUT_KERNEL_IMG)
+	@echo "Kernel built successfully: $(KERNEL_IMG)"
+	@echo "Versioned kernel created: $(OUTPUT_KERNEL_IMG)"
 
 # Create distribution kernel
 $(DIST_KERNEL): $(KERNEL_IMG) | $(ARCH_DIST_DIR)
@@ -322,20 +341,39 @@ iso: $(DIST_ISO)
 
 $(DIST_ISO): $(KERNEL_IMG) | $(ARCH_DIST_DIR)
 	@echo "Creating ISO image for $(ARCH)..."
-	@mkdir -p $(ARCH_BUILD_DIR)/iso/boot
+	@mkdir -p $(ARCH_BUILD_DIR)/iso/boot/grub
 	@cp $(KERNEL_IMG) $(ARCH_BUILD_DIR)/iso/boot/kernel.img
-	@if [ "$(PLATFORM)" = "rpi5" ]; then \
-		cp config_rpi5.txt $(ARCH_BUILD_DIR)/iso/boot/config.txt; \
+	@if [ "$(ARCH)" = "x86_64" ] || [ "$(ARCH)" = "i386" ]; then \
+		echo "Creating GRUB-based bootable ISO for x86..."; \
+		cp grub.cfg $(ARCH_BUILD_DIR)/iso/boot/grub/grub.cfg; \
+		if command -v grub-mkrescue >/dev/null 2>&1; then \
+			grub-mkrescue -o $(DIST_ISO) $(ARCH_BUILD_DIR)/iso; \
+		else \
+			echo "GRUB not available, creating simple bootable ISO..."; \
+			if command -v mkisofs >/dev/null 2>&1; then \
+				mkisofs -o $(DIST_ISO) -b boot/kernel.img -c boot/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table $(ARCH_BUILD_DIR)/iso; \
+			elif command -v genisoimage >/dev/null 2>&1; then \
+				genisoimage -o $(DIST_ISO) -b boot/kernel.img -c boot/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table $(ARCH_BUILD_DIR)/iso; \
+			else \
+				echo "Error: No ISO creation tool found. Install grub-common, cdrtools or genisoimage."; \
+				exit 1; \
+			fi; \
+		fi; \
 	else \
-		cp config.txt $(ARCH_BUILD_DIR)/iso/boot/config.txt; \
-	fi
-	@if command -v mkisofs >/dev/null 2>&1; then \
-		mkisofs -o $(DIST_ISO) -b boot/kernel.img -c boot/boot.cat -no-emul-boot $(ARCH_BUILD_DIR)/iso; \
-	elif command -v genisoimage >/dev/null 2>&1; then \
-		genisoimage -o $(DIST_ISO) -b boot/kernel.img -c boot/boot.cat -no-emul-boot $(ARCH_BUILD_DIR)/iso; \
-	else \
-		echo "Error: No ISO creation tool found. Install cdrtools or genisoimage."; \
-		exit 1; \
+		echo "Creating simple bootable ISO for $(ARCH)..."; \
+		if [ "$(PLATFORM)" = "rpi5" ]; then \
+			cp config_rpi5.txt $(ARCH_BUILD_DIR)/iso/boot/config.txt; \
+		else \
+			cp config.txt $(ARCH_BUILD_DIR)/iso/boot/config.txt; \
+		fi; \
+		if command -v mkisofs >/dev/null 2>&1; then \
+			mkisofs -o $(DIST_ISO) -b boot/kernel.img -c boot/boot.cat -no-emul-boot $(ARCH_BUILD_DIR)/iso; \
+		elif command -v genisoimage >/dev/null 2>&1; then \
+			genisoimage -o $(DIST_ISO) -b boot/kernel.img -c boot/boot.cat -no-emul-boot $(ARCH_BUILD_DIR)/iso; \
+		else \
+			echo "Error: No ISO creation tool found. Install cdrtools or genisoimage."; \
+			exit 1; \
+		fi; \
 	fi
 	@echo "ISO image created: $(DIST_ISO)"
 
@@ -405,8 +443,10 @@ docker: $(KERNEL_IMG)
 .PHONY: qemu
 qemu: $(KERNEL_IMG)
 	@echo "Running SAGE OS in QEMU ($(ARCH)/$(PLATFORM))..."
-	@if command -v qemu-system-$(QEMU_ARCH) >/dev/null 2>&1; then \
-		qemu-system-$(QEMU_ARCH) -M $(QEMU_MACHINE) -kernel $(KERNEL_IMG) -serial stdio -nographic; \
+	@KERNEL_TO_RUN=$${KERNEL_IMG:-$(KERNEL_IMG)}; \
+	echo "Using kernel: $$KERNEL_TO_RUN"; \
+	if command -v qemu-system-$(QEMU_ARCH) >/dev/null 2>&1; then \
+		qemu-system-$(QEMU_ARCH) -M $(QEMU_MACHINE) -kernel $$KERNEL_TO_RUN -serial stdio -nographic; \
 	else \
 		echo "Error: qemu-system-$(QEMU_ARCH) not found."; \
 		echo "Install QEMU or run 'make install-deps'"; \
